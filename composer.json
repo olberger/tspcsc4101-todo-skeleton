@@ -1,8 +1,8 @@
 {
-    "name": "oberger/tspcsc4101-skeleton",
+    "name": "oberger/tspcsc4101-todo-skeleton",
     "type": "project",
     "license": "MIT",
-    "description": "A minimal Symfony project for CSC4101 teaching at TSP",
+    "description": "A minimal ToDo app Symfony project for CSC4101 teaching at TSP",
     "minimum-stability": "dev",
     "require": {
         "php": "^7.1.3",
