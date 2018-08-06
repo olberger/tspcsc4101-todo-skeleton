@@ -65,6 +65,19 @@ class ListactiveTodosCommand extends ContainerAwareCommand
         } else {
             $errOutput->writeln('<error>no active todos found!</error>');
         }
+
+// Alternative basée sur Doctrine
+//         // récupère une liste toutes les instances de la classe Todo dont completed vaut false
+//         $todos = $em->getRepository(Todo::class)->findByCompleted(false);
         
+//         if(! empty($todos)) {
+//             $output->writeln('list of active todos:');
+//             foreach($todos as $todo) {
+//                 //$output->writeln($todo->__toString());
+//                 $output->writeln($todo);
+//             }
+//         } else {
+//             $errOutput->writeln('<error>no active todos found!</error>');
+//         }
     }
 }
