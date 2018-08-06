@@ -1,8 +1,8 @@
 <?php
 /**
- * Gestion de la page d'accueil de l'application
+ * Gestion de la commande d'affichage d'un tâche en ligne de commande
  *
- * @copyright  2017 Telecom SudParis
+ * @copyright  2017-2018 Telecom SudParis
  * @license    "MIT/X" License - cf. LICENSE file at project root
  */
 
@@ -16,9 +16,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command Todo
+ * Command ShowTodo
  */
-class TodoCommand extends ContainerAwareCommand
+class ShowTodoCommand extends ContainerAwareCommand
 {    
     protected function configure()
     {
@@ -31,15 +31,25 @@ class TodoCommand extends ContainerAwareCommand
         
         // the full command description shown when running the command with
         // the "--help" option
-        ->setHelp('This command allows you to list one todo')
+        ->setHelp('This command allows you to show one todo')
         ->addArgument('todoId', InputArgument::REQUIRED, 'The id of the todo.')
         ;
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
+        
         $em = $this->getContainer()->get('doctrine')->getManager();
         
-        $todo = $em->getRepository(Todo::class)->find($input->getArgument('todoId'));
-        $output->writeln($todo->__toString());
+        $id = $input->getArgument('todoId');
+        $todo = $em->getRepository(Todo::class)->find($id);
+        
+        if ($todo) {
+            // $output->writeln($todo->__toString());
+            $output->writeln($todo);
+        } else {
+            $errOutput->writeln('<error>no todos found with id "'. $id .'"!</error>');
+        }
+        
     }
 }

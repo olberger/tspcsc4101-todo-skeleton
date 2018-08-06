@@ -5,7 +5,7 @@ use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 
 /**
- * Contrat
+ * Tâche
  *
  * @ORM\Table(name="todos")
  * @ORM\Entity()
@@ -46,12 +46,20 @@ class Todo {
      * @ORM\Column(name="updated", type="datetime")
      */
     private $updated;
-    public function __construct(){
+    public function __construct() 
+    {
         $this->created = new \DateTime();
         $this->updated = new \DateTime();
     }
-    public function __toString(){
-        return $this->id .' '. $this->title.' completed :'.$this->completed;
+    /**
+     * @return string
+     */
+    public function __toString() 
+    {
+        $s = '';
+        $s .= $this->getId() .' '. $this->getTitle() .' ';
+        $s .= $this->getCompleted() ? '(completed)': '(not complete)';
+        return $s;
     }
     /**
      * @return int
@@ -123,5 +131,4 @@ class Todo {
         $this->updated = $updated;
     }
 
-    
 }
