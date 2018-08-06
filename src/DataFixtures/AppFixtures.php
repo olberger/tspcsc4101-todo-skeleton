@@ -36,6 +36,7 @@ class AppFixtures extends Fixture
     private function getTodosData()
     {
         // todo = [title, completed];
+        yield ['apprendre les bases de PHP', true];
         yield ['devenir un pro du Web', false];
         yield ['monter une startup',  false];
         yield ['devenir maître du monde', false];
