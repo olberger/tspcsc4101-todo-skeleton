@@ -29,28 +29,36 @@ class Todo {
      * @ORM\Column(name="title", type="text", nullable=True)
      */
     private $title = "";
+    
     /**
+     * @var bool Is the task completed/finished.
+     * 
+     *  If a todo task is completed, true. If it's still active, false
+     *    
      * @ORM\Column(type="boolean")
      */
     private $completed;
 
     /**
-     * @var Datetime
+     * @var \Datetime Date of creation
      *
      * @ORM\Column(name="created", type="datetime")
      */
     private $created;
+    
     /**
-     * @var Datetime
+     * @var \Datetime Date of last modification
      *
      * @ORM\Column(name="updated", type="datetime")
      */
     private $updated;
+    
     public function __construct() 
     {
         $this->created = new \DateTime();
         $this->updated = new \DateTime();
     }
+    
     /**
      * @return string
      */
@@ -61,6 +69,7 @@ class Todo {
         $s .= $this->getCompleted() ? '(completed)': '(not complete)';
         return $s;
     }
+    
     /**
      * @return int
      */
@@ -68,10 +77,12 @@ class Todo {
     {
         return $this->id;
     }
+    
     public function getTitle(): ?string
     {
         return $this->title;
     }
+    
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -92,7 +103,7 @@ class Todo {
     }
 
     /**
-     * @return Datetime
+     * @return \Datetime
      */
     public function getCreated()
     {
@@ -100,7 +111,7 @@ class Todo {
     }
 
     /**
-     * @return Datetime
+     * @return \Datetime
      */
     public function getUpdated()
     {
@@ -116,7 +127,7 @@ class Todo {
     }
 
     /**
-     * @param Datetime $created
+     * @param \Datetime $created
      */
     public function setCreated(Datetime $created)
     {
@@ -124,7 +135,7 @@ class Todo {
     }
 
     /**
-     * @param Datetime $updated
+     * @param \Datetime $updated
      */
     public function setUpdated(Datetime $updated)
     {
