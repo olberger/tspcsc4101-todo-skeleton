@@ -12,4 +12,40 @@
 
 <p>{{ welcome }}</p>
 
+<p><button id="todosbtn">Cliquer ici pour charger la liste des tâches dynamiquement</button></p>
+ 
+<!-- réceptacle pour la liste des tâches chargée dynamiquement -->
+<div class="divtasks"></div>
+
 {% endblock %} {# main #}
+
+{% block custompage_script %}
+<script>
+// Chargement de la liste des tâches en AJAX avec JQuery
+$(document).ready(function(){
+	// enregistrer un gestionnaire de clics sur le bouton d'id 'todosbtn'
+   	$("#todosbtn").click(function(){
+  		// récupération AJAX de la liste des tâches au format JSON
+		$.get("/api/todos", function(getresult){
+			// console.log(getresult);
+			// insertion d'une liste dans la cible prévue dans le DOM
+			var ul = $(".divtasks").append('<ul>');
+			// Gestion des résultats de la liste récupérés
+			$(getresult).each( function(index, item) {
+				// ajout d'un élément dans la liste 
+				ul.append(
+					$(document.createElement('li')).text(item.title)
+				);
+			});
+		},
+		"json");
+ 	});
+ 
+});
+ 
+</script>
+
+ 
+
+
+{% endblock %} {# custompage_script #}
