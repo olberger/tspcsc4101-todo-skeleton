@@ -1,12 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'baselayout.html.twig' %}
 
 {% block title %}Todo{% endblock %}
 
 {% block main %}
     <h1>Todo</h1>
 
-	{{  dump(todo)  }}
-	
     <table class="table">
         <tbody>
             <tr>
@@ -18,8 +16,8 @@
                 <td>{{ todo.title }}</td>
             </tr>
             <tr>
-                <th>Completed</th>
-                <td>{{ todo.completed }}</td>
+                <th>Complete</th>
+                <td>{{ todo.completed ? 'Yes' : 'No' }}</td>
             </tr>
             <tr>
                 <th>Created</th>
@@ -34,4 +32,7 @@
 
     <a href="{{ path('todo_index') }}">back to list</a>
 
+    <a href="{{ path('todo_edit', {'id': todo.id}) }}">edit</a>
+
+    {{ include('todo/_delete_form.html.twig') }}
 {% endblock %}
