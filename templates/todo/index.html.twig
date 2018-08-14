@@ -19,11 +19,20 @@
         <tbody>
         {% for todo in todos %}
             <tr>
+ 
                 <td>{{ todo.id }}</td>
-                <td>{{ todo.title }}</td>
+                <td>
+           {% if todo.completed %}
+            <del>
+            {% endif %}
+            {{ todo.title }}</td>
+            {% if todo.completed %}
+            </del>
+            {% endif %}
                 <td>{{ todo.completed }}</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>
+
                 <td><a href="{{ path('todo_show', {'id': todo.id}) }}">show</a></td>
             </tr>
         {% else %}
