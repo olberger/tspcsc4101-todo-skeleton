@@ -1,8 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'baselayout.html.twig' %}
 
 {% block title %}Edit Paste{% endblock %}
 
-{% block body %}
+{% block main %}
     <h1>Edit Paste</h1>
 
     {{ include('paste/_form.html.twig', {'button_label': 'Update'}) }}

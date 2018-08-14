@@ -37,6 +37,8 @@ class MenuBuilder
             ->setAttribute('icon', 'fa fa-list');
         // ... add more children
         $menu->addChild('Todo list', array('route' => 'todo_list'));
+        $menu->addChild('Paste list', array('route' => 'paste_index'));
+        
         
         return $menu;
     }

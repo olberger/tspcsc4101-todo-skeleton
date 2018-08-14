@@ -33,7 +33,7 @@ class TodoController extends Controller
         
         $todos = $em->getRepository(Todo::class)->findAll();
         
-        dump($todos);
+        //dump($todos);
         
         return $this->render('todo/index.html.twig', array(
             'todos' => $todos,

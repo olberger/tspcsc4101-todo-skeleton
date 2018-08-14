@@ -20,8 +20,15 @@
         {% for todo in todos %}
             <tr>
                 <td>{{ todo.id }}</td>
-                <td>{{ todo.title }}</td>
-                <td>{{ todo.completed ? 'Yes' : 'No' }}</td>
+                <td>
+          {% if todo.completed %}
+            <del>
+            {% endif %}
+            {{ todo.title }}
+            {% if todo.completed %}
+            </del>
+            {% endif %}   
+            </td>                <td>{{ todo.completed ? 'Yes' : 'No' }}</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>                
                 <td>
