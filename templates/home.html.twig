@@ -11,11 +11,22 @@
 <h1>Welcome</h1>
 
 <p>{{ welcome }}</p>
-
-<p><button id="todosbtn">Cliquer ici pour charger la liste des tâches dynamiquement</button></p>
- 
+<table type="table">
+<tr>
+<td><button id="todosbtn">Charger la liste des tâches</button></td>
+<td><button id="pastesbtn">Charger la liste des pastes</button></td>
+</tr>
+<tr>
+<td>
 <!-- réceptacle pour la liste des tâches chargée dynamiquement -->
 <div class="divtasks"></div>
+</td>
+<td>
+<!-- réceptacle pour la liste des pastes chargée dynamiquement -->
+<div class="divpastes"></div>
+</td>
+</tr>
+</table>
 
 {% endblock %} {# main #}
 
@@ -40,6 +51,23 @@ $(document).ready(function(){
 		},
 		"json");
  	});
+    // enregistrer un gestionnaire de clics sur le bouton d'id 'pastesbtn'
+    $("#pastesbtn").click(function(){
+        // récupération AJAX de la liste des tâches au format JSON
+        $.get("/api/pastes", function(getresult){
+            // console.log(getresult);
+            // insertion d'une liste dans la cible prévue dans le DOM
+            var ul = $(".divpastes").append('<ul>');
+            // Gestion des résultats de la liste récupérés
+            $(getresult).each( function(index, item) {
+                // ajout d'un élément dans la liste 
+                ul.append(
+                    $(document.createElement('li')).text(item.content)
+                );
+            });
+        },
+        "json");
+    });
  
 });
  
