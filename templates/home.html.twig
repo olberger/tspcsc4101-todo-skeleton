@@ -40,7 +40,8 @@ $(document).ready(function(){
 		$.get("/api/todos", function(getresult){
 			// console.log(getresult);
 			// insertion d'une liste dans la cible prévue dans le DOM
-			var ul = $(".divtasks").append('<ul>');
+			$(".divtasks").empty();
+			var ul = $(".divtasks").append('<ul class="tasksul".>');
 			// Gestion des résultats de la liste récupérés
 			$(getresult).each( function(index, item) {
 				// ajout d'un élément dans la liste 
@@ -56,6 +57,7 @@ $(document).ready(function(){
         // récupération AJAX de la liste des tâches au format JSON
         $.get("/api/pastes", function(getresult){
             // console.log(getresult);
+            $(".divpastes").empty();
             // insertion d'une liste dans la cible prévue dans le DOM
             var ul = $(".divpastes").append('<ul>');
             // Gestion des résultats de la liste récupérés
