@@ -36,7 +36,10 @@ class PasteController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($paste);
             $em->flush();
-
+            
+            // Make sure message will be displayed after redirect
+            $this->get('session')->getFlashBag()->add('message', 'paste bien ajouté');
+            
             return $this->redirectToRoute('paste_index');
         }
 
@@ -64,7 +67,10 @@ class PasteController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
+            
+            // Make sure message will be displayed after redirect
+            $this->get('session')->getFlashBag()->add('message', 'paste bien modifié');
+            
             return $this->redirectToRoute('paste_edit', ['id' => $paste->getId()]);
         }
 
@@ -83,6 +89,10 @@ class PasteController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($paste);
             $em->flush();
+            
+            // Make sure message will be displayed after redirect
+            $this->get('session')->getFlashBag()->add('message', 'paste supprimé');
+            
         }
 
         return $this->redirectToRoute('paste_index');

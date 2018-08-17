@@ -130,6 +130,10 @@ class TodoController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($todo);
             $em->flush();
+            
+            // Make sure message will be displayed after redirect
+            $this->get('session')->getFlashBag()->add('message', 'tâche supprimée');
+            
         }
         
         return $this->redirectToRoute('todo_index');
