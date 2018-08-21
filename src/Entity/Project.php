@@ -40,6 +40,10 @@ class Project
         $this->todos = new ArrayCollection();
     }
 
+    public function __toString() {
+        return (string) $this->getTitle();
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

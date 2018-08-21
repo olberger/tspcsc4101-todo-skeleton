@@ -1,8 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'baselayout.html.twig' %}
 
 {% block title %}Project{% endblock %}
 
-{% block body %}
+{% block main %}
     <h1>Project</h1>
 
     <table class="table">
@@ -22,9 +22,19 @@
         </tbody>
     </table>
 
+	<h2>Project tasks</h2>
+	
+	<ul class="todos">
+	{% for todo in project.todos %}
+		<li><a href="{{ path('todo_show', {'id' : todo.id}) }}">{{ todo.title }}</a></li>
+	{% endfor %}
+    </ul>
+    
+    <a href="{{ path('todo_add', {'id': project.id}) }}">add new task</a>
+	
     <a href="{{ path('project_index') }}">back to list</a>
 
     <a href="{{ path('project_edit', {'id': project.id}) }}">edit</a>
 
     {{ include('project/_delete_form.html.twig') }}
-{% endblock %}
+{% endblock %} {# main #}

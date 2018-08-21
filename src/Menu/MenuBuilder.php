@@ -36,6 +36,7 @@ class MenuBuilder
         $menu->addChild('Home', array('route' => 'home'))
             ->setAttribute('icon', 'fa fa-list');
         // ... add more children
+        $menu->addChild('Project list', array('route' => 'project_index'));
         $menu->addChild('Todo list', array('route' => 'todo_list'));
         $menu->addChild('Paste list', array('route' => 'paste_index'));
         

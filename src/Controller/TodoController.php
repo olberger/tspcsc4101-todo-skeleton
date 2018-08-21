@@ -8,6 +8,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Project;
 use App\Entity\Todo;
 use App\Form\TodoType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -95,6 +96,33 @@ class TodoController extends Controller
         ]);
     }
     
+    /**
+     * @Route("/project/{id}/addtodo", name="todo_add", methods="GET|POST")
+     */
+    public function add(Request $request, Project $project): Response
+    {
+        $todo = new Todo();
+        $form = $this->createForm(TodoType::class, $todo);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $todo->setCreated(new \DateTime());
+            $project->addTodo($todo);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($todo);
+            $em->flush();
+            
+            // Make sure message will be displayed after redirect
+            $this->get('session')->getFlashBag()->add('message', 'tâche bien ajoutée au projet');
+            
+            return $this->redirectToRoute('project_show', array('id' => $project->getId() ));
+        }
+        
+        return $this->render('todo/add.html.twig', [
+            'project' => $project,
+            'todo' => $todo,
+            'form' => $form->createView(),
+        ]);
+    }
     
     /**
      * @Route("/{id}/edit", name="todo_edit", methods="GET|POST")

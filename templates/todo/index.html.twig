@@ -13,6 +13,7 @@
                 <th>Completed</th>
                 <th>Created</th>
                 <th>Updated</th>
+                <th>Project</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -30,7 +31,12 @@
             {% endif %}   
             </td>                <td>{{ todo.completed ? 'Yes' : 'No' }}</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>                
+                <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>              
+                <td>
+                	{% if todo.project %}
+                	<a href="{{ path('project_show', {'id': todo.project.id}) }}">show project</a>
+                	{% endif %}
+                </td>  
                 <td>
                     <a href="{{ path('todo_show', {'id': todo.id}) }}">show</a>
                     <a href="{{ path('todo_edit', {'id': todo.id}) }}">edit</a>

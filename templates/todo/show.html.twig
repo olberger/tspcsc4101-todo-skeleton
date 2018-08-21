@@ -27,6 +27,16 @@
                 <th>Updated</th>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
+            <tr>
+            	<th>Project</th>
+            	<td>
+                {% if todo.project %}
+                	<a href="{{ path('project_show', {'id': todo.project.id}) }}">show project</a>
+                {% else %}
+    	        	-
+	            {% endif %}
+                </td>
+             </tr>
         </tbody>
     </table>
 
