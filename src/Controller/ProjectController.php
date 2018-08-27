@@ -9,6 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Todo;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Route("/project")
@@ -29,6 +32,7 @@ class ProjectController extends Controller
     public function new(Request $request): Response
     {
         $project = new Project();
+        
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
@@ -57,13 +61,36 @@ class ProjectController extends Controller
     /**
      * @Route("/{id}/edit", name="project_edit", methods="GET|POST")
      */
-    public function edit(Request $request, Project $project): Response
+    public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response
     {
+        $originalTodos = new ArrayCollection();
+        
+        // Create an ArrayCollection of the current Todo objects in the database
+        foreach ($project->getTodos() as $todo) {
+            $originalTodos->add($todo);
+        }
+        
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            
+            foreach ($originalTodos as $todo) {
+                if (! $project->getTodos()->contains($todo)) {
+                    // remove the Todo from the Project
+                    $project->getTodos()->removeElement($todo);
+                    
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    // $todo->setTask(null);
+                    
+                    //$entityManager->persist($todo);
+                    
+                    // if you wanted to delete the Todo entirely, you can also do that
+                    $entityManager->remove($todo);
+                }
+            }
+            
+            $entityManager->flush();
 
             return $this->redirectToRoute('project_edit', ['id' => $project->getId()]);
         }

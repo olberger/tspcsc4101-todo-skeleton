@@ -31,7 +31,7 @@ class Project
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Todo", mappedBy="project")
+     * @ORM\OneToMany(targetEntity="App\Entity\Todo", mappedBy="project", cascade={"persist"})
      */
     private $todos;
 
