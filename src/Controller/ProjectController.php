@@ -76,16 +76,9 @@ class ProjectController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             
             foreach ($originalTodos as $todo) {
+                // if the original todo is no longer there
                 if (! $project->getTodos()->contains($todo)) {
-                    // remove the Todo from the Project
-                    $project->getTodos()->removeElement($todo);
-                    
-                    // if it was a many-to-one relationship, remove the relationship like this
-                    // $todo->setTask(null);
-                    
-                    //$entityManager->persist($todo);
-                    
-                    // if you wanted to delete the Todo entirely, you can also do that
+                    // delete the Todo entirely
                     $entityManager->remove($todo);
                 }
             }
