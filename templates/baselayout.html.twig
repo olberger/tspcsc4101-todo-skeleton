@@ -66,10 +66,10 @@ additionnel spécifique à chaque page #}
 				</div>
 
 				{# Collect the nav links, forms, and other content for toggling #}
-				<div>
+				<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
 					{{ knp_menu_render('main', {'currentClass': 'active'}) }}
 					{# knp_menu_render('user', {'currentClass': 'active'}) #}
-				</div>
+				</nav>
 			</div>
 		</div>
 		{% endblock %} {# menu #}

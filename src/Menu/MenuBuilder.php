@@ -34,9 +34,13 @@ class MenuBuilder
         $menu->setChildrenAttribute('class', 'nav navbar-nav');
         
         $menu->addChild('Home', array('route' => 'home'))
-            ->setAttribute('icon', 'fa fa-list');
+            ->setAttributes(array(
+                'class' => 'nav-item',
+                'icon' => 'fa fa-list'
+            ));
         // ... add more children
-        $menu->addChild('Todo list', array('route' => 'todo_list'));
+        $menu->addChild('Todo list', array('route' => 'todo_list'))
+            ->setAttributes(array('class' => 'nav-item'));
         $menu->addChild('Paste list', array('route' => 'paste_index'));
         
         
@@ -46,7 +50,7 @@ class MenuBuilder
     public function createUserMenu(array $options)
     {
         $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', 'nav navbar-nav navbar-right');
+        $menu->setChildrenAttribute('class', 'nav navbar-nav  ml-auto');
         
         //if($this->container->get('security.context')->isGranted(array('ROLE_ADMIN', 'ROLE_USER'))) {} // Check if the visitor has any authenticated roles
         if($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
