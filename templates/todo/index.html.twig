@@ -9,11 +9,11 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Title</th>
+                <th>Todo</th>
                 <th>Completed</th>
                 <th>Created</th>
                 <th>Updated</th>
-                <th>actions</th>
+                <td> &nbsp;</td>
             </tr>
         </thead>
         <tbody>
@@ -21,21 +21,17 @@
             <tr>
                 <td>{{ todo.id }}</td>
                 <td>
-          {% if todo.completed %}
+           {% if todo.completed %}
             <del>
             {% endif %}
-            {{ todo.title }}
+            {{ todo.title }}</td>
             {% if todo.completed %}
             </del>
-            {% endif %}   
-            </td>
-                <td>{{ todo.completed ? 'Yes' : 'No' }}</td>
+            {% endif %}
+                <td>{{ todo.completed }}</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>                
-                <td>
-                    <a href="{{ path('todo_show', {'id': todo.id}) }}">show</a>
-                    <a href="{{ path('todo_edit', {'id': todo.id}) }}">edit</a>
-                </td>
+                <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>
+                <td><a href="{{ path('todo_show', {'id': todo.id}) }}">show</a></td>
             </tr>
         {% else %}
             <tr>
@@ -44,6 +40,5 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('todo_new') }}">Create new</a>
+    
 {% endblock %}
