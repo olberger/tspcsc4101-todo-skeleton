@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TodoController extends Controller
 {    
     /**
-     * @Route("/", name = "home", methods="GET")
+     * @Route("/", name = "todo_home", methods="GET")
      */
     public function indexAction()
     {
