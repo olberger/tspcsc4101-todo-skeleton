@@ -39,7 +39,6 @@ class MenuBuilder
         $menu->addChild('Todo list', array('route' => 'todo_list'));
         $menu->addChild('Actives Todos', array('route' => 'todo_active_list'));
         
-        
         return $menu;
     }
     
