@@ -46,11 +46,7 @@ class ShowTodoCommand extends ContainerAwareCommand
         
         if ($todo) {
             // $output->writeln($todo->__toString());
-            $output->write($todo->getId() .": ". $todo->getTitle());
-            $output->writeln(" ".$todo->getCompleted() ? '(completed)': '(not complete)');
-            $output->writeln("\t created: ".$todo->getCreated()->format('Y-m-d H:i:s'));
-            $output->writeln("\t updated: ".$todo->getUpdated()->format('Y-m-d H:i:s'));
-            
+            $output->writeln($todo);
         } else {
             $errOutput->writeln('<error>no todos found with id "'. $id .'"!</error>');
         }
