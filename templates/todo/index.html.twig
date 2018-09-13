@@ -28,7 +28,8 @@
             {% if todo.completed %}
             </del>
             {% endif %}   
-            </td>                <td>{{ todo.completed ? 'Yes' : 'No' }}</td>
+            </td> 
+             <td>{{ todo.completed ? 'Yes' : 'No' }}</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>                
                 <td>
