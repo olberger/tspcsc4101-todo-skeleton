@@ -33,8 +33,6 @@ class TodoController extends Controller
         
         $todos = $em->getRepository(Todo::class)->findAll();
         
-        dump($todos);
-        
         return $this->render('todo/index.html.twig', array(
             'todos' => $todos,
         ));
@@ -50,8 +48,7 @@ class TodoController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        // $todos = $em->getRepository(Todo::class)->findByCompleted(false);
-        $todos = $em->getRepository(Todo::class)->findAll(false);
+        $todos = $em->getRepository(Todo::class)->findByCompleted(false);
         
         return $this->render('todo/active-index.html.twig', array(
             'todos' => $todos,
