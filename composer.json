@@ -10,9 +10,7 @@
         "ext-iconv": "*",
         "symfony/console": "^4.1",
         "symfony/flex": "^1.0",
-        "symfony/force-lowest": "=4.1",
         "symfony/framework-bundle": "^4.1",
-        "symfony/lts": "^4@dev",
         "symfony/yaml": "^4.1",
         "doctrine/doctrine-fixtures-bundle": "^3.0",
         "sensio/framework-extra-bundle": "^5.1",
@@ -79,7 +77,8 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false
+            "allow-contrib": false,
+            "require": "~4.1"
         }
     }
 }
