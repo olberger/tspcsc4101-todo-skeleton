@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Todo{% endblock %}
+
+{% block main %}
+    <h1>Todo</h1>
+
+	{{  dump(todo)  }}
+	
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ todo.id }}</td>
+            </tr>
+            <tr>
+                <th>Todo</th>
+                <td>{{ todo.title }}</td>
+            </tr>
+            <tr>
+                <th>Completed</th>
+                <td>{{ todo.completed }}</td>
+            </tr>
+            <tr>
+                <th>Created</th>
+                <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Updated</th>
+                <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('todo_index') }}">back to list</a>
+
+{% endblock %}
