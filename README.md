@@ -12,7 +12,7 @@ To test, use :
 
 Changelog :
  - v4.x : Add knp_menu and boostrap
- - v3.x : TBD
+ - v3.x : Add templating with Twig
  - v2.x : Add basic Web interface
  - v1.x : initial version with CLI commands
  
