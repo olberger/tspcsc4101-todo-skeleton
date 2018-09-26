@@ -35,24 +35,28 @@ additionnel spécifique à chaque page #}
 </head>
 <body>
 	{% block body %} {# Bootstrap container #}
-	<div style="min-height: 90%" class="container">
+             <header>
 		{% block menu %}
+				{# Collect the nav links, forms, and other content for toggling #}
+				<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-light">
+					{{ knp_menu_render('main', {'currentClass': 'active'}) }}
+					{# knp_menu_render('user', {'currentClass': 'active'}) #}
+				</nav>
+		{% endblock %} {# menu #}
+             </header>
+
+	<div style="min-height: 90%" class="container">
 		<div class="row">
 			<div class="col-md-12">
 				<div>
 					Todo List !
 				</div>
 
-				{# Collect the nav links, forms, and other content for toggling #}
-				<div>
-					{{ knp_menu_render('main', {'currentClass': 'active'}) }}
-					{# knp_menu_render('user', {'currentClass': 'active'}) #}
-				</div>
 			</div>
 		</div>
-		{% endblock %} {# menu #}
 
 		<div class="container body-container">
+<main>
 			{% block main %}
 			<div class="row">
 				<div class="col-md-12">
@@ -62,6 +66,7 @@ additionnel spécifique à chaque page #}
 				</div>
 			</div>
 			{% endblock %} {# main #}
+</main>
 		</div> <!-- /.body-container -->
 		{% block footer %}
 		<div class="row">
