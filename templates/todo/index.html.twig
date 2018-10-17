@@ -34,7 +34,9 @@
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>                
                 <td>
                     <a href="{{ path('todo_show', {'id': todo.id}) }}">show</a>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('todo_edit', {'id': todo.id}) }}">edit</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -45,5 +47,8 @@
         </tbody>
     </table>
 
+    {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('todo_new') }}">Create new</a>
+    {% endif %}
+
 {% endblock %}

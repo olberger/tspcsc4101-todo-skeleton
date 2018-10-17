@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * Controleur Todo
@@ -71,6 +72,7 @@ class TodoController extends Controller
     
     /**
      * @Route("/new", name="todo_new", methods="GET|POST")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function new(Request $request): Response
     {
@@ -98,6 +100,7 @@ class TodoController extends Controller
     
     /**
      * @Route("/{id}/edit", name="todo_edit", methods="GET|POST")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function edit(Request $request, Todo $todo): Response
     {
@@ -123,6 +126,7 @@ class TodoController extends Controller
     
     /**
      * @Route("/{id}", name="todo_delete", methods="DELETE")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function delete(Request $request, Todo $todo): Response
     {
