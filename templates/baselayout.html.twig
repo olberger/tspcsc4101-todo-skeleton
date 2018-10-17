@@ -1,31 +1,23 @@
-{# templates/baselayout.html.twig Implémente un gabarit HTML 5 de base
-pour Bootstrap Les blocs suivants sont surchargeables : - title : titre
-de la page pour <title> - description : description de la page pour
-<meta name="description... - stylesheets : styles ou links pour le CSS
-déclaré dans le <head> - custompage_style : balise(s) <style>
-additionnelles spécifiques à chaque page - header : premiers éléments
-contenus dans le <div class="container"> bootstrap (une row par ex.) -
-main : milieu du contenu bootstrap (deuxième row) - footer : fin des
-éléments du container bootstrap. Typiquement un <footer> - javascripts :
-Javascripts de fin de <body> - custompage_script : javascript
-additionnel spécifique à chaque page #}
+{# templates/baselayout.html.twig
 
-{%  block alerts %}
- {% for type, messages in app.session.flashBag.all %}
-    {% for message in messages %}
-        {%if type == 'error'%} {% set type = 'danger' %} {%endif%}
-        {%if type == 'message'%} {% set type = 'info' %} {%endif%}
-        <div class="alert alert-{{ type }} alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert">
-                <span aria-hidden="true">&times;</span>
-                <span class="sr-only">Close</span>
-            </button>
-            <p>{{ message|raw }}</p>
-        </div>
-    {% endfor %}
-{% endfor %}
-{% endblock %} {# alerts #}
+   Implémente un gabarit HTML 5 de base pour Bootstrap.
 
+   Les blocs suivants sont surchargeables :
+   - title : titre de la page pour <title>
+   - description : description de la page pour
+     <meta name="description...
+   - stylesheets : styles ou links pour le CSS
+     déclaré dans le <head>
+   - custompage_style : balise(s) <style>
+     additionnelles spécifiques à chaque page
+   - header : premiers éléments
+     contenus dans le <div class="container"> bootstrap (une row par ex.)
+   - main : milieu du contenu bootstrap (deuxième row)
+   - footer : fin des éléments du container bootstrap. Typiquement
+     un <footer>
+   - javascripts : Javascripts de fin de <body>
+   - custompage_script : javascript additionnel spécifique à chaque page
+#}
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -52,24 +44,42 @@ additionnel spécifique à chaque page #}
 </head>
 <body>
 	{% block body %} {# Bootstrap container #}
-	<div style="min-height: 90%" class="container">
+             <header>
 		{% block menu %}
+				{# Collect the nav links, forms, and other content for toggling #}
+				<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-light">
+					{{ knp_menu_render('main', {'currentClass': 'active'}) }}
+					{# knp_menu_render('user', {'currentClass': 'active'}) #}
+				</nav>
+		{% endblock %} {# menu #}
+             </header>
+
+	<div style="min-height: 90%" class="container">
 		<div class="row">
 			<div class="col-md-12">
 				<div>
 					Application Todo et Paste
 				</div>
 
-				{# Collect the nav links, forms, and other content for toggling #}
-				<div>
-					{{ knp_menu_render('main', {'currentClass': 'active'}) }}
-					{# knp_menu_render('user', {'currentClass': 'active'}) #}
-				</div>
 			</div>
 		</div>
-		{% endblock %} {# menu #}
-        {{ block('alerts') }}
+{%  block alerts %}
+ {% for type, messages in app.session.flashBag.all %}
+    {% for message in messages %}
+        {%if type == 'error'%} {% set type = 'danger' %} {%endif%}
+        {%if type == 'message'%} {% set type = 'info' %} {%endif%}
+        <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+            </button>
+            <p>{{ message|raw }}</p>
+        </div>
+    {% endfor %}
+{% endfor %}
+{% endblock %} {# alerts #}
 		<div class="container body-container">
+<main>
 			{% block main %}
 			<div class="row">
 				<div class="col-md-12">
@@ -79,6 +89,7 @@ additionnel spécifique à chaque page #}
 				</div>
 			</div>
 			{% endblock %} {# main #}
+</main>
 		</div> <!-- /.body-container -->
 		{% block footer %}
 		<div class="row">
