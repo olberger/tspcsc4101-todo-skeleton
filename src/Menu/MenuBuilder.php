@@ -39,6 +39,8 @@ class MenuBuilder
                 'icon' => 'fa fa-list'
             ));
         // ... add more children
+        $menu->addChild('Project list', array('route' => 'project_index'))
+            ->setAttributes(array('class' => 'nav-link'));
         $menu->addChild('Todo list', array('route' => 'todo_list'))
             ->setAttributes(array('class' => 'nav-link'));
         $menu->addChild('Actives Todos', array('route' => 'todo_active_list'))

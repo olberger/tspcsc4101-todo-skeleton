@@ -7,7 +7,17 @@ use DateTime;
 
 /**
  * Tâche
- * @ApiResource
+ * @ApiResource(
+ *     collectionOperations={
+ *         "get",
+ *         "post"={"access_control"="is_granted('ROLE_ADMIN')"}
+ *     },
+ *     itemOperations={
+ *         "get",
+ *         "put"={"access_control"="is_granted('ROLE_ADMIN')"},
+ *         "delete"={"access_control"="is_granted('ROLE_ADMIN')"}
+ *     }
+ * )
  * @ORM\Table(name="todos")
  * @ORM\Entity()
  *
@@ -53,6 +63,11 @@ class Todo {
      * @ORM\Column(name="updated", type="datetime")
      */
     private $updated;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Project", inversedBy="todos")
+     */
+    private $project;
     
     public function __construct() 
     {
@@ -141,6 +156,18 @@ class Todo {
     public function setUpdated(Datetime $updated)
     {
         $this->updated = $updated;
+    }
+
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(?Project $project): self
+    {
+        $this->project = $project;
+
+        return $this;
     }
 
 }
