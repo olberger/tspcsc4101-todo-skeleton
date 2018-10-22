@@ -8,9 +8,10 @@ Composer packages can be found at
 https://packagist.org/packages/oberger/tspcsc4101-todo-skeleton
 
 To test, use :
- $ composer create-project oberger/tspcsc4101-todo-skeleton todo-app v7.*
+ $ composer create-project oberger/tspcsc4101-todo-skeleton todo-app v8.*
 
 Changelog :
+ - v8.x : Projects and their todos (associations)
  - v7.x : Included JQuery dynamic interface
  - v6.x : ApiPlatform
  - v5.x : CRUD
