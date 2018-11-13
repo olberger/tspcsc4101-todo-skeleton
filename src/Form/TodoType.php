@@ -14,12 +14,19 @@ class TodoType extends AbstractType
         $builder
             ->add('title')
             ->add('completed')
-            ->add('project')
         ;
+        // We explicitely avoid setting 'entry_options' to array('label' => false) in the ProjectType
+        // so that the label we get here isn't null when we're in a collection of sub forms
+        // where its value is '__name__value__'
+        if ($options['label'] != '__name__label__') {
+            $builder->add('project');
+        }
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
+        //dump($resolver);
         $resolver->setDefaults([
             'data_class' => Todo::class,
         ]);

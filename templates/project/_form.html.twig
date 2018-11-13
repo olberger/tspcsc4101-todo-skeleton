@@ -1,5 +1,16 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+
+    {{ form_row(form.title) }}
+    {{ form_row(form.description) }}
+
+    <h3>Tasks</h3>
+    <ul class="todos" data-prototype="{{ form_widget(form.todos.vars.prototype)|e('html_attr') }}">
+        {# iterate over each existing todo and render its only field: title #}
+        {% for todo in form.todos %}
+            <li>{{ form_row(todo.title) }} - {{ form_row(todo.completed) }}</li>
+        {% endfor %}
+    </ul>
+    
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
