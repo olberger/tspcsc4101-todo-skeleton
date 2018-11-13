@@ -29,17 +29,20 @@
             {% if todo.completed %}
             </del>
             {% endif %}   
-            </td>                <td>{{ todo.completed ? 'Yes' : 'No' }}</td>
+            </td> 
+             <td>{{ todo.completed ? 'Yes' : 'No' }}</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>              
                 <td>
                 	{% if todo.project %}
-                	<a href="{{ path('project_show', {'id': todo.project.id}) }}">show project</a>
+                	<a href="{{ path('project_show', {'id': todo.project.id}) }}" data-toggle="tooltip" title="{{ todo.project.description }}">{{ todo.project.title }}</a>
                 	{% endif %}
                 </td>  
                 <td>
                     <a href="{{ path('todo_show', {'id': todo.id}) }}">show</a>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('todo_edit', {'id': todo.id}) }}">edit</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -50,5 +53,8 @@
         </tbody>
     </table>
 
+    {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('todo_new') }}">Create new</a>
+    {% endif %}
+
 {% endblock %}

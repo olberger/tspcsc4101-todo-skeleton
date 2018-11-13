@@ -31,7 +31,7 @@ class Project
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Todo", mappedBy="project")
+     * @ORM\OneToMany(targetEntity="App\Entity\Todo", mappedBy="project", cascade={"persist"})
      */
     private $todos;
 
@@ -41,7 +41,7 @@ class Project
     }
 
     public function __toString() {
-        return (string) $this->getTitle();
+        return (string) ($this->getTitle() . ' - ' . $this->getDescription());
     }
     
     public function getId(): ?int
