@@ -15,12 +15,8 @@ variables:
         APP_ENV: 'prod'
         APP_DEBUG: 1
         CORS_ALLOW_ORIGIN: '^https?://localhost(:[0-9]+)?$'
-#        DATABASE_URL: 'sqlite:///%kernel.project_dir%/var/data.db'
 #        DATABASE_URL: 'mysql://user@database.internal:3306/main'
-#        DATABASE_HOST: 'database.internal'
-#        DATABASE_URL: 'mysql://user@169.254.229.190:3306/main'
-#        DATABASE_URL: 'mysql://db_user:db_password@127.0.0.1:3306/db_name'
-#        DATABASE_URL: 'mysql://user@169.254.116.156:3306/main'
+
 
 # The hooks that will be performed when the package is deployed.
 hooks:
@@ -28,7 +24,6 @@ hooks:
         set -e
         bin/console assets:install --no-debug
         bin/console cache:clear
-#        DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db" bin/console cache:clear
     deploy: |
         set -e
         bin/console assets:install --symlink --relative public
