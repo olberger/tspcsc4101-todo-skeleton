@@ -41,7 +41,7 @@ class Project
     }
 
     public function __toString() {
-        return (string) $this->getTitle();
+        return (string) ($this->getTitle() . ' - ' . $this->getDescription());
     }
     
     public function getId(): ?int

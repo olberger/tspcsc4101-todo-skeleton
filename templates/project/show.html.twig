@@ -26,7 +26,15 @@
 	
 	<ul class="todos">
 	{% for todo in project.todos %}
-		<li><a href="{{ path('todo_show', {'id' : todo.id}) }}">{{ todo.title }}</a></li>
+		<li>
+			{% if todo.completed %}
+            <del>
+            {% endif %}
+			<a href="{{ path('todo_show', {'id' : todo.id}) }}">{{ todo.title }}</a>
+            {% if todo.completed %}
+            </del>
+            {% endif %}
+		</li>
 	{% endfor %}
     </ul>
     

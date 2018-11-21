@@ -17,7 +17,9 @@ class ProjectType extends AbstractType
             ->add('description')
             ->add('todos', CollectionType::class, array(
                 'entry_type' => TodoType::class,
-                'entry_options' => array('label' => false),
+                // We don't follow the advice of the docs and thus need changing that label later in the JS
+                // This allows us to detect when the TodoType form will be a subform
+                //'entry_options' => array('label' => false), 
                 'allow_add' => true,
                 'by_reference' => false,
                 'allow_delete' => true,
