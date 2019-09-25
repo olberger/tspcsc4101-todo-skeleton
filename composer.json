@@ -3,6 +3,7 @@
     "type": "project",
     "license": "MIT",
     "description": "A minimal ToDo app Symfony project for CSC4101 teaching at TSP",
+    "version" : "3.5",
     "require": {
         "php": "^7.1.3",
         "ext-ctype": "*",
@@ -15,7 +16,9 @@
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "^4.1",
         "symfony/expression-language": "^4.1",
+        "symfony/force-lowest": "=4.1",
         "symfony/form": "^4.1",
+        "symfony/lts": "^4@dev",
         "symfony/monolog-bundle": "^3.1",
         "symfony/orm-pack": "*",
         "symfony/process": "^4.1",
@@ -24,7 +27,7 @@
         "symfony/swiftmailer-bundle": "^3.1",
         "symfony/twig-bundle": "^4.1",
         "symfony/validator": "^4.1",
-        "symfony/web-link": "^4.1"
+        "symfony/web-link": "^4.1",
     },
     "require-dev": {
         "symfony/dotenv": "^4.1",
