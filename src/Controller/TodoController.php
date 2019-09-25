@@ -70,6 +70,8 @@ class TodoController extends Controller
          }
         $htmlpage .= '</ul>';
 
+        $htmlpage .= '</body></html>';
+        
         return new Response(
             $htmlpage,
             Response::HTTP_OK,
@@ -97,9 +99,10 @@ class TodoController extends Controller
         $htmlpage .= '<dt>TODO</dt><dd>' . $todo->getTitle() . '</dd>';
         $htmlpage .= '<dt>Date de création</dt> <dd> ' . $todo->getCreated()->format('Y-m-d') . '</dd>';
         $htmlpage .= '<dt>Date de modification</dt> <dd> '. $todo->getUpdated()->format('Y-m-d') . '</dd>';
-        $htmlpage .= '<dt>Satus</dt><dd>' . $todo->getCompleted() ? '	Terminé ' : ' En cours ' . '</dd>';
+        $htmlpage .= '<dt>Satus</dt><dd>' . ($todo->getCompleted() ? '	Terminé ' : ' En cours ' ) . '</dd>';
         $htmlpage .= '</dl>';
-        
+        $htmlpage .= '</ul></body></html>';
+                
         return new Response(
                 $htmlpage,
                 Response::HTTP_OK,
