@@ -69,7 +69,22 @@ class MenuBuilder
         $menu->addChild('User', array('label' => $label))
         ->setAttribute('dropdown', true)
         ->setAttribute('icon', 'fa fa-user');
-        
+        if($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $menu->addChild('Logout', array('route' => 'app_logout'))
+            ->setAttributes(array(
+                'class' => 'nav-link',
+                'icon' => 'fa fa-list'
+            ));
+        }
+        else
+        {
+            $menu->addChild('Login', array('route' => 'app_login'))
+            ->setAttributes(array(
+                'class' => 'nav-link',
+                'icon' => 'fa fa-list'
+            ));
+        }
         return $menu;
     }
     
