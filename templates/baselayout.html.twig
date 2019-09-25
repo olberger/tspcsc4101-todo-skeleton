@@ -50,6 +50,22 @@
 		{% endblock %} {# menu #}
              </header>
 
+{%  block alerts %}
+ {% for type, messages in app.session.flashBag.all %}
+    {% for message in messages %}
+        {%if type == 'error'%} {% set type = 'danger' %} {%endif%}
+        {%if type == 'message'%} {% set type = 'info' %} {%endif%}
+        <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+            </button>
+            <p>{{ message|raw }}</p>
+        </div>
+    {% endfor %}
+{% endfor %}
+{% endblock %} {# alerts #}
+
 	<div style="min-height: 90%" class="container">
 		<div class="row">
 			<div class="col-md-12">
