@@ -41,9 +41,11 @@ class MenuBuilder
         // ... add more children
         $menu->addChild('Todo list', array('route' => 'todo_list'))
             ->setAttributes(array('class' => 'nav-link'));
-        $menu->addChild('Paste list', array('route' => 'paste_index'))
-        ->setAttributes(array('class' => 'nav-link'));;
-        
+        $menu->addChild('Actives Todos', array('route' => 'todo_active_list'))
+            ->setAttributes(array('class' => 'nav-link'));
+        $menu->addChild('Pastes', array('route' => 'paste_index'))
+            ->setAttributes(array('class' => 'nav-link'));
+
         return $menu;
     }
     
