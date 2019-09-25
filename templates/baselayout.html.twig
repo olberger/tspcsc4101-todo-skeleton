@@ -1,14 +1,23 @@
-{# templates/baselayout.html.twig Implémente un gabarit HTML 5 de base
-pour Bootstrap Les blocs suivants sont surchargeables : - title : titre
-de la page pour <title> - description : description de la page pour
-<meta name="description... - stylesheets : styles ou links pour le CSS
-déclaré dans le <head> - custompage_style : balise(s) <style>
-additionnelles spécifiques à chaque page - header : premiers éléments
-contenus dans le <div class="container"> bootstrap (une row par ex.) -
-main : milieu du contenu bootstrap (deuxième row) - footer : fin des
-éléments du container bootstrap. Typiquement un <footer> - javascripts :
-Javascripts de fin de <body> - custompage_script : javascript
-additionnel spécifique à chaque page #}
+{# templates/baselayout.html.twig
+
+   Implémente un gabarit HTML 5 de base pour Bootstrap.
+
+   Les blocs suivants sont surchargeables :
+   - title : titre de la page pour <title>
+   - description : description de la page pour
+     <meta name="description...
+   - stylesheets : styles ou links pour le CSS
+     déclaré dans le <head>
+   - custompage_style : balise(s) <style>
+     additionnelles spécifiques à chaque page
+   - header : premiers éléments
+     contenus dans le <div class="container"> bootstrap (une row par ex.)
+   - main : milieu du contenu bootstrap (deuxième row)
+   - footer : fin des éléments du container bootstrap. Typiquement
+     un <footer>
+   - javascripts : Javascripts de fin de <body>
+   - custompage_script : javascript additionnel spécifique à chaque page
+#}
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -19,40 +28,38 @@ additionnel spécifique à chaque page #}
 <title>{% block title %}Application Todo List{% endblock %}</title>
 {% block stylesheets %}
 <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!--  
 <link rel="stylesheet"	href="/css/bootstrap-darkly.css">
+-->
+{% endblock %}{# stylesheets #}
 
 {% block custompage_style %}
 <link href="/css/styles.css" rel="stylesheet">
-{% endblock %}
-<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-{% endblock %}
-{# stylesheets #}
+{% endblock %}{# custompage_style #}
 </head>
 <body>
 	{% block body %} {# Bootstrap container #}
-	<div style="min-height: 90%" class="container">
+             <header>
 		{% block menu %}
+				{# Collect the nav links, forms, and other content for toggling #}
+				<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-light">
+					{{ knp_menu_render('main', {'currentClass': 'active'}) }}
+					{# knp_menu_render('user', {'currentClass': 'active'}) #}
+				</nav>
+		{% endblock %} {# menu #}
+             </header>
+
+	<div style="min-height: 90%" class="container">
 		<div class="row">
 			<div class="col-md-12">
 				<div>
-					Todo List !
-				</div>
-
-				{# Collect the nav links, forms, and other content for toggling #}
-				<div>
-					{{ knp_menu_render('main', {'currentClass': 'active'}) }}
-					{# knp_menu_render('user', {'currentClass': 'active'}) #}
+					Application Todo et Paste
 				</div>
 			</div>
 		</div>
-		{% endblock %} {# menu #}
-
 		<div class="container body-container">
+<main>
 			{% block main %}
 			<div class="row">
 				<div class="col-md-12">
@@ -62,6 +69,7 @@ additionnel spécifique à chaque page #}
 				</div>
 			</div>
 			{% endblock %} {# main #}
+</main>
 		</div> <!-- /.body-container -->
 		{% block footer %}
 		<div class="row">
@@ -79,9 +87,16 @@ additionnel spécifique à chaque page #}
 </body>
 {% block javascripts %}
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://code.jquery.com/jquery-3.4.1.js"
+              integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+              crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<!-- 
 <script	src="/js/jquery-3.3.1.js"></script>
 <script src="/js/popper.js"></script>
 <script	src="/js/bootstrap.js"></script>
+ --> 
 {% endblock %} {# javascripts #}
 {% block custompage_script %}
 {% endblock %}

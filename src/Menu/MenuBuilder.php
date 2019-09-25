@@ -31,7 +31,7 @@ class MenuBuilder
     public function createMainMenu(array $options)
     {
         $menu = $this->factory->createItem('root');
-        $menu->setChildrenAttribute('class', 'nav navbar-nav');
+        $menu->setChildrenAttribute('class', 'nav navbar-item');
         
         $menu->addChild('Home', array('route' => 'home'))
             ->setAttribute('icon', 'fa fa-list');
