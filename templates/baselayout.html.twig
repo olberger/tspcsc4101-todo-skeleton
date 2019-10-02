@@ -28,10 +28,11 @@
 <title>{% block title %}Application Todo List{% endblock %}</title>
 {% block stylesheets %}
 <!-- Bootstrap -->
-<link rel="stylesheet"	href="/css/bootstrap-darkly.css">
-
+  <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  
 {% block custompage_style %}
-<link href="/css/styles.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
 {% endblock %}
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -118,10 +119,9 @@
 	{% endblock %} {# body #}
 </body>
 {% block javascripts %}
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script	src="/js/jquery-3.3.1.js"></script>
-<script src="/js/popper.js"></script>
-<script	src="/js/bootstrap.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 {% endblock %} {# javascripts #}
 {% block custompage_script %}
 {% endblock %}
