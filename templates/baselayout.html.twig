@@ -29,12 +29,11 @@
 {% block stylesheets %}
 <!-- Bootstrap -->
   <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-{% endblock %}{# stylesheets #}
 
-{% block custompage_style %}
-<!-- Custom styles for this template -->
-<link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
-{% endblock %}{# custompage_style #}
+  {% block custompage_style %}
+  <!-- Custom styles for this template -->
+  <link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
+  {% endblock %}{# custompage_style #}
 {% endblock %}{# stylesheets #}
 </head>
 <body>
