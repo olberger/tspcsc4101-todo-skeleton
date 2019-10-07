@@ -31,7 +31,7 @@ class Paste
      */
     private $content_type;
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
