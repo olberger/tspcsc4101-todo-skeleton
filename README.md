@@ -11,7 +11,7 @@ To test, use :
  $ composer create-project oberger/tspcsc4101-todo-skeleton todo-app v5.*
 
 Changelog :
- - v5.x : TBD
+ - v5.x : Add Pastes entity with its CRUD controller
  - v4.x : Add camurphy/bootstrap-menu-bundle and boostrap
  - v3.x : Add templating with Twig
  - v2.x : Add basic Web interface
