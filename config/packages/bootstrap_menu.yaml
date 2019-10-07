@@ -4,10 +4,19 @@ bootstrap_menu:
       items:
         todos:
           label: 'Tasks'
-          route: 'todo_list'
-        actives:
-          label: 'Active tasks'
-          route: 'todo_active_list'
+          items:
+            all:
+              label: 'All tasks'
+              route: 'todo_list'
+            actives:
+              label: 'Active tasks'
+              route: 'todo_active_list'
+        pastes:
+          label: 'Pastes'
+          items:
+            all:
+              label: 'List'
+              route: 'paste_index'
     anonymousaccount:
       items:
         account:
