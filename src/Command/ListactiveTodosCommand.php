@@ -9,11 +9,11 @@
 namespace App\Command;
 
 use App\Entity\Todo;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Command ListactiveTodos
@@ -21,8 +21,16 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
  * cf. https://symfony.com/doc/current/console.html
  *
  */
-class ListactiveTodosCommand extends ContainerAwareCommand
+class ListactiveTodosCommand extends Command
 {
+    private $todoRepository;
+    
+    public function __construct(ContainerInterface $container)
+    {
+        parent::__construct();
+        $this->todoRepository = $container->get('doctrine')->getManager()->getRepository(Todo::class);
+    }
+    
     protected function configure()
     {
         $this
@@ -42,11 +50,8 @@ class ListactiveTodosCommand extends ContainerAwareCommand
     {
         $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
         
-        // entityManager
-        $em = $this->getContainer()->get('doctrine')->getManager(); 
-        
         // récupère une liste toutes les instances de la classe Todo
-        $todos = $em->getRepository(Todo::class)->findAll();
+        $todos = $this->todoRepository->findAll();
         
         // filtrer les tâches pas encore terminées
         $actives=array();
@@ -68,7 +73,7 @@ class ListactiveTodosCommand extends ContainerAwareCommand
 
 // Alternative basée sur Doctrine
 //         // récupère une liste toutes les instances de la classe Todo dont completed vaut false
-//         $todos = $em->getRepository(Todo::class)->findByCompleted(false);
+//         $todos = $this->todoRepository->findByCompleted(false);
         
 //         if(! empty($todos)) {
 //             $output->writeln('list of active todos:');

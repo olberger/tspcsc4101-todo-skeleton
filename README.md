@@ -13,9 +13,9 @@ To test, use :
 Changelog :
  - v7.x : Included JQuery dynamic interface
  - v6.x : ApiPlatform
- - v5.x : CRUD
- - v4.x : Add knp_menu and boostrap
- - v3.x : TBD
+ - v5.x : Add Pastes entity with its CRUD controller
+ - v4.x : Add camurphy/bootstrap-menu-bundle and boostrap
+ - v3.x : Add templating with Twig
  - v2.x : Add basic Web interface
  - v1.x : initial version with CLI commands
  

@@ -28,25 +28,49 @@
 <title>{% block title %}Application Todo List{% endblock %}</title>
 {% block stylesheets %}
 <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<!--  
-<link rel="stylesheet"	href="/css/bootstrap-darkly.css">
--->
-{% endblock %}{# stylesheets #}
+  <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
-{% block custompage_style %}
-<link href="/css/styles.css" rel="stylesheet">
-{% endblock %}{# custompage_style #}
+  {% block custompage_style %}
+  <!-- Custom styles for this template -->
+  <link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
+  {% endblock %}{# custompage_style #}
+{% endblock %}{# stylesheets #}
 </head>
 <body>
 	{% block body %} {# Bootstrap container #}
              <header>
 		{% block menu %}
 				{# Collect the nav links, forms, and other content for toggling #}
-				<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-light">
-					{{ knp_menu_render('main', {'currentClass': 'active'}) }}
-					{{ knp_menu_render('user', {'currentClass': 'active'}) }}
-				</nav>
+				  <!-- Navigation -->
+                  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+                    <div class="container">
+                      <a class="navbar-brand" href="{{ path('home') }}">ToDo</a>
+                      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarsMainDefault">
+                        <ul class="navbar-nav mr-auto">
+                          {{ render_bootstrap_menu('main') }}
+                        </ul>
+                      </div>
+                      {#
+                      {% if app.user %}
+                      <div class="collapse navbar-collapse" id="navbarsAccountDefault">
+                        <ul class="navbar-nav ml-auto">
+                          {{ render_bootstrap_menu('account') }}
+                        </ul>
+                      </div>
+                      {% else %}
+                      <div class="collapse navbar-collapse" id="navbarsAnonAccountDefault">
+                        <ul class="navbar-nav ml-auto">
+                          {{ render_bootstrap_menu('anonymousaccount') }}
+                        </ul>
+                      </div>
+                      {% endif %}
+                      #}
+                    </div>
+                  </nav>
+				
 		{% endblock %} {# menu #}
              </header>
 
@@ -56,7 +80,6 @@
 				<div>
 					Application Todo et Paste
 				</div>
-
 			</div>
 		</div>
 {%  block alerts %}
@@ -102,17 +125,9 @@
 	{% endblock %} {# body #}
 </body>
 {% block javascripts %}
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="https://code.jquery.com/jquery-3.4.1.js"
-              integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-              crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<!-- 
-<script	src="/js/jquery-3.3.1.js"></script>
-<script src="/js/popper.js"></script>
-<script	src="/js/bootstrap.js"></script>
- --> 
+  <!-- Bootstrap core JavaScript -->
+  <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 {% endblock %} {# javascripts #}
 {% block custompage_script %}
 {% endblock %}
