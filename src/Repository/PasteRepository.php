@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Paste;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @method Paste|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,14 +14,14 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class PasteRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Paste::class);
     }
 
-//    /**
-//     * @return Paste[] Returns an array of Paste objects
-//     */
+    // /**
+    //  * @return Paste[] Returns an array of Paste objects
+    //  */
     /*
     public function findByExampleField($value)
     {
