@@ -9,17 +9,29 @@
 namespace App\Command;
 
 use App\Entity\Todo;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Command Todo
  */
-class NewTodoCommand extends ContainerAwareCommand
-{    
+class NewTodoCommand extends Command
+{
+    /**
+     * @var EntityManager
+     */
+    private $em;
+    
+    public function __construct(ContainerInterface $container)
+    {
+        parent::__construct();
+        $this->em = $container->get('doctrine')->getManager();
+    }
+    
     protected function configure()
     {
         $this
@@ -40,9 +52,8 @@ class NewTodoCommand extends ContainerAwareCommand
         $todo = new Todo();
         $todo->setTitle($input->getArgument('title'));
         $todo->setCompleted(false);
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $em->persist($todo);
-        $em->flush();
+        $this->em->persist($todo);
+        $this->em->flush();
         $output->writeln('Created: '. $todo);
     }
 }
