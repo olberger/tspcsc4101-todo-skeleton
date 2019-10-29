@@ -2,6 +2,12 @@ bootstrap_menu:
   menus:
     main:
       items:
+        projects:
+          label: 'Projects'
+          items:
+            all:
+              label: 'Projects list'
+              route: 'project_index'
         todos:
           label: 'Tasks'
           items:
