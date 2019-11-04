@@ -11,7 +11,7 @@ To test, use :
  $ composer create-project oberger/tspcsc4101-todo-skeleton todo-app v8.*
 
 Changelog :
- - v8.x : Projects and their todos (associations)
+ - v8.x : Projects and their todos (associations) + images in Pastes
  - v7.x : Included JQuery dynamic interface
  - v6.x : ApiPlatform
  - v5.x : Add Pastes entity with its CRUD controller
