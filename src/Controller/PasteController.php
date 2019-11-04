@@ -35,6 +35,11 @@ class PasteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imagefile = $paste->getImageFile();
+            if($imagefile) {
+                $mimetype = $imagefile->getMimeType();
+                $paste->setContentType($mimetype);
+            }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($paste);
             $entityManager->flush();
