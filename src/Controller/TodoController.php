@@ -104,11 +104,14 @@ class TodoController extends AbstractController
     public function add(Request $request, Project $project): Response
     {
         $todo = new Todo();
+        // already set a project, so as to not need add that field in the form (in TodoType)
+        $todo->setProject($project);
+        
         $form = $this->createForm(TodoType::class, $todo);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $todo->setCreated(new \DateTime());
-            $project->addTodo($todo);
+            
             $em = $this->getDoctrine()->getManager();
             $em->persist($todo);
             $em->flush();
