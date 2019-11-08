@@ -11,7 +11,7 @@ namespace App\Controller;
 use App\Entity\Project;
 use App\Entity\Todo;
 use App\Form\TodoType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,7 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  * Controleur Todo
  * @Route("/todo")
  */
-class TodoController extends Controller
+class TodoController extends AbstractController
 {    
     /**
      * Lists all todo entities.
@@ -104,11 +104,14 @@ class TodoController extends Controller
     public function add(Request $request, Project $project): Response
     {
         $todo = new Todo();
+        // already set a project, so as to not need add that field in the form (in TodoType)
+        $todo->setProject($project);
+        
         $form = $this->createForm(TodoType::class, $todo);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $todo->setCreated(new \DateTime());
-            $project->addTodo($todo);
+            
             $em = $this->getDoctrine()->getManager();
             $em->persist($todo);
             $em->flush();
