@@ -73,7 +73,7 @@ class TodoController extends AbstractController
     
     /**
      * @Route("/new", name="todo_new", methods="GET|POST")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function new(Request $request): Response
     {
@@ -131,7 +131,7 @@ class TodoController extends AbstractController
     
     /**
      * @Route("/{id}/edit", name="todo_edit", methods="GET|POST")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function edit(Request $request, Todo $todo): Response
     {
@@ -157,7 +157,7 @@ class TodoController extends AbstractController
     
     /**
      * @Route("/{id}", name="todo_delete", methods="DELETE")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function delete(Request $request, Todo $todo): Response
     {
