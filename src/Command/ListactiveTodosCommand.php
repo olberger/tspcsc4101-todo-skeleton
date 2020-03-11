@@ -13,7 +13,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+
+
+use Symfony\Component\Console\Command\Command;
+use Doctrine\Persistence\ManagerRegistry;
+
 
 /**
  * Command ListactiveTodos
@@ -23,12 +27,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ListactiveTodosCommand extends Command
 {
+
+    private $doctrineManager;
     private $todoRepository;
     
-    public function __construct(ContainerInterface $container)
+    public function __construct(ManagerRegistry $doctrineManager)
     {
+        $this->doctrineManager = $doctrineManager;
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
         parent::__construct();
-        $this->todoRepository = $container->get('doctrine')->getManager()->getRepository(Todo::class);
     }
     
     protected function configure()
@@ -69,12 +76,12 @@ class ListactiveTodosCommand extends Command
             }
         } else {
             $errOutput->writeln('<error>no active todos found!</error>');
+            return 1;
         }
-
+        return 0;
 // Alternative basée sur Doctrine
 //         // récupère une liste toutes les instances de la classe Todo dont completed vaut false
 //         $todos = $this->todoRepository->findByCompleted(false);
-        
 //         if(! empty($todos)) {
 //             $output->writeln('list of active todos:');
 //             foreach($todos as $todo) {
@@ -83,6 +90,7 @@ class ListactiveTodosCommand extends Command
 //             }
 //         } else {
 //             $errOutput->writeln('<error>no active todos found!</error>');
+//        return 1;  
 //         }
     }
 }
