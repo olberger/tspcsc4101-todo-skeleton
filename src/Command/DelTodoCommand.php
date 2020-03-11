@@ -9,13 +9,15 @@
 namespace App\Command;
 
 use App\Entity\Todo;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Command\Command;
-use Doctrine\Persistence\ManagerRegistry;
-
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+
 
 /**
  * Command Todo
@@ -23,13 +25,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DelTodoCommand extends Command
 {    
     private $doctrineManager;
+    private $todoRepository;
     
     public function __construct(ManagerRegistry $doctrineManager)
     {
         $this->doctrineManager = $doctrineManager;
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
         
         parent::__construct();
     }
+    
     protected function configure()
     {
         $this
@@ -51,12 +56,11 @@ class DelTodoCommand extends Command
         
         $id = $input->getArgument('todoId');
         
-        $em = $this->doctrineManager;
-        $todo = $em->getRepository(Todo::class)->find($id);
+        $todo = $this->todoRepository->find($id);
         
         if ($todo) {
-            $em->remove($todo);
-            $em->flush();
+            $this->em->remove($todo);
+            $this->em->flush();
         } else {
             $errOutput->writeln('<error>no todos found with id "'. $id .'"!</error>');
             return 1;

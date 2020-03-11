@@ -12,6 +12,7 @@ use App\Entity\Todo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+
 use Symfony\Component\Console\Command\Command;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -23,12 +24,14 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ListactiveTodosCommand extends Command
 {
+
     private $doctrineManager;
+    private $todoRepository;
     
     public function __construct(ManagerRegistry $doctrineManager)
     {
         $this->doctrineManager = $doctrineManager;
-        
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
         parent::__construct();
     }
     
@@ -51,11 +54,8 @@ class ListactiveTodosCommand extends Command
     {
         $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
         
-        // entityManager
-        $em = $this->doctrineManager;
-        
         // récupère une liste toutes les instances de la classe Todo
-        $todos = $em->getRepository(Todo::class)->findAll();
+        $todos = $this->todoRepository->findAll();
         
         // filtrer les tâches pas encore terminées
         $actives=array();
@@ -78,8 +78,7 @@ class ListactiveTodosCommand extends Command
         return 0;
 // Alternative basée sur Doctrine
 //         // récupère une liste toutes les instances de la classe Todo dont completed vaut false
-//         $todos = $em->getRepository(Todo::class)->findByCompleted(false);
-//
+//         $todos = $this->todoRepository->findByCompleted(false);
 //         if(! empty($todos)) {
 //             $output->writeln('list of active todos:');
 //             foreach($todos as $todo) {

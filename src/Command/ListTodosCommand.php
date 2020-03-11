@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
 use Doctrine\Persistence\ManagerRegistry;
 
+
 /**
  * Command ListTodo
  * 
@@ -25,11 +26,12 @@ class ListTodosCommand extends Command
 {    
     
     private $doctrineManager;
+    private $todoRepository;
     
     public function __construct(ManagerRegistry $doctrineManager)
     {
         $this->doctrineManager = $doctrineManager;
-        
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
         parent::__construct();
     }
     
@@ -51,11 +53,8 @@ class ListTodosCommand extends Command
     {
         $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
         
-        // entityManager
-        $em = $this->doctrineManager;
-        
         // récupère une liste toutes les instances de la classe Todo 
-        $todos = $em->getRepository(Todo::class)->findAll();
+        $todos = $this->todoRepository->findAll();
         
         if(! empty($todos)) {
             $output->writeln('list of todos:');

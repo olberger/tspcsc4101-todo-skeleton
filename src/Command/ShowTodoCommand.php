@@ -10,22 +10,28 @@ namespace App\Command;
 
 use App\Entity\Todo;
 use Symfony\Component\Console\Command\Command;
+
 use Doctrine\Persistence\ManagerRegistry;
+
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Command ShowTodo
  */
 class ShowTodoCommand extends Command
+
 {    
     private $doctrineManager;
+    private $todoRepository;
     
     public function __construct(ManagerRegistry $doctrineManager)
     {
         $this->doctrineManager = $doctrineManager;
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
         
         parent::__construct();
     }
@@ -48,11 +54,9 @@ class ShowTodoCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
-        
-        $em = $this->doctrineManager;
-        
+             
         $id = $input->getArgument('todoId');
-        $todo = $em->getRepository(Todo::class)->find($id);
+        $todo = $this->todoRepository->find($id);
         
         if ($todo) {
             // $output->writeln($todo->__toString());
