@@ -23,7 +23,6 @@
         "symfony/security-bundle": "*",
         "symfony/serializer-pack": "*",
         "symfony/swiftmailer-bundle": "*",
-        "symfony/twig-pack": "*",
         "symfony/validator": "*",
         "symfony/web-link": "*",
         "symfony/yaml": "5.0"
