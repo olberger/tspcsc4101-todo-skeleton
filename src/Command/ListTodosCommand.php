@@ -32,6 +32,7 @@ class ListTodosCommand extends Command
         
         parent::__construct();
     }
+    
     protected function configure()
     {
         $this

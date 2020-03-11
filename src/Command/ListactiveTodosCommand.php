@@ -12,8 +12,8 @@ use App\Entity\Todo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-
+use Symfony\Component\Console\Command\Command;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Command ListactiveTodos
@@ -21,8 +21,17 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
  * cf. https://symfony.com/doc/current/console.html
  *
  */
-class ListactiveTodosCommand extends ContainerAwareCommand
+class ListactiveTodosCommand extends Command
 {
+    private $doctrineManager;
+    
+    public function __construct(ManagerRegistry $doctrineManager)
+    {
+        $this->doctrineManager = $doctrineManager;
+        
+        parent::__construct();
+    }
+    
     protected function configure()
     {
         $this
@@ -43,7 +52,7 @@ class ListactiveTodosCommand extends ContainerAwareCommand
         $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
         
         // entityManager
-        $em = $this->getContainer()->get('doctrine')->getManager(); 
+        $em = $this->doctrineManager;
         
         // récupère une liste toutes les instances de la classe Todo
         $todos = $em->getRepository(Todo::class)->findAll();
@@ -64,12 +73,13 @@ class ListactiveTodosCommand extends ContainerAwareCommand
             }
         } else {
             $errOutput->writeln('<error>no active todos found!</error>');
+            return 1;
         }
-
+        return 0;
 // Alternative basée sur Doctrine
 //         // récupère une liste toutes les instances de la classe Todo dont completed vaut false
 //         $todos = $em->getRepository(Todo::class)->findByCompleted(false);
-        
+//
 //         if(! empty($todos)) {
 //             $output->writeln('list of active todos:');
 //             foreach($todos as $todo) {
@@ -78,6 +88,7 @@ class ListactiveTodosCommand extends ContainerAwareCommand
 //             }
 //         } else {
 //             $errOutput->writeln('<error>no active todos found!</error>');
+//        return 1;  
 //         }
     }
 }
