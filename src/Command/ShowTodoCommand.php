@@ -9,7 +9,8 @@
 namespace App\Command;
 
 use App\Entity\Todo;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -18,8 +19,17 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Command ShowTodo
  */
-class ShowTodoCommand extends ContainerAwareCommand
+class ShowTodoCommand extends Command
 {    
+    private $doctrineManager;
+    
+    public function __construct(ManagerRegistry $doctrineManager)
+    {
+        $this->doctrineManager = $doctrineManager;
+        
+        parent::__construct();
+    }
+    
     protected function configure()
     {
         $this
@@ -39,7 +49,7 @@ class ShowTodoCommand extends ContainerAwareCommand
     {
         $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
         
-        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em = $this->doctrineManager;
         
         $id = $input->getArgument('todoId');
         $todo = $em->getRepository(Todo::class)->find($id);
@@ -47,9 +57,10 @@ class ShowTodoCommand extends ContainerAwareCommand
         if ($todo) {
             // $output->writeln($todo->__toString());
             $output->writeln($todo);
+            return 1;
         } else {
             $errOutput->writeln('<error>no todos found with id "'. $id .'"!</error>');
         }
-        
+        return 0;
     }
 }
