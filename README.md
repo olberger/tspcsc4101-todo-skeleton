@@ -8,6 +8,7 @@ Composer packages can be found at
 https://packagist.org/packages/oberger/tspcsc4101-todo-skeleton
 
 To test, use :
+
  $ composer create-project oberger/tspcsc4101-todo-skeleton todo-app v3.*
 
 Changelog :

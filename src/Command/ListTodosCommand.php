@@ -12,8 +12,8 @@ use App\Entity\Todo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-
+use Symfony\Component\Console\Command\Command;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Command ListTodo
@@ -21,8 +21,18 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
  * cf. https://symfony.com/doc/current/console.html
  * 
  */
-class ListTodosCommand extends ContainerAwareCommand
+class ListTodosCommand extends Command
 {    
+    
+    private $doctrineManager;
+    
+    public function __construct(ManagerRegistry $doctrineManager)
+    {
+        $this->doctrineManager = $doctrineManager;
+        
+        parent::__construct();
+    }
+    
     protected function configure()
     {
         $this
@@ -42,7 +52,7 @@ class ListTodosCommand extends ContainerAwareCommand
         $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
         
         // entityManager
-        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em = $this->doctrineManager;
         
         // récupère une liste toutes les instances de la classe Todo 
         $todos = $em->getRepository(Todo::class)->findAll();
@@ -55,7 +65,8 @@ class ListTodosCommand extends ContainerAwareCommand
             }
         } else {
             $errOutput->writeln('<error>no todos found!</error>');
+            return 1;
         }
-        
+        return 0;
     }
 }

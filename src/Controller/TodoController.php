@@ -9,7 +9,7 @@
 namespace App\Controller;
 
 use App\Entity\Todo;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * Controleur Todo
  * @Route("/todo")
  */
-class TodoController extends Controller
+class TodoController extends AbstractController
 {    
     /**
      * Lists all todo entities.
@@ -61,6 +61,7 @@ class TodoController extends Controller
      */
     public function showAction(Todo $todo): Response
     {
+
         return $this->render('todo/show.html.twig', array(
             'todo' => $todo,
         ));
