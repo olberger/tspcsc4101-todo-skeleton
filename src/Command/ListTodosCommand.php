@@ -9,11 +9,12 @@
 namespace App\Command;
 
 use App\Entity\Todo;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Console\Command\Command;
+use Doctrine\Persistence\ManagerRegistry;
+
 
 /**
  * Command ListTodo
@@ -23,12 +24,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ListTodosCommand extends Command
 {    
+    
+    private $doctrineManager;
     private $todoRepository;
     
-    public function __construct(ContainerInterface $container)
+    public function __construct(ManagerRegistry $doctrineManager)
     {
+        $this->doctrineManager = $doctrineManager;
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
         parent::__construct();
-        $this->todoRepository = $container->get('doctrine')->getManager()->getRepository(Todo::class);
     }
     
     protected function configure()
@@ -60,7 +64,8 @@ class ListTodosCommand extends Command
             }
         } else {
             $errOutput->writeln('<error>no todos found!</error>');
+            return 1;
         }
-        
+        return 0;
     }
 }

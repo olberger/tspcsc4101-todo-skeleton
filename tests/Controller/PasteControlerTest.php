@@ -2,6 +2,8 @@
 namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
+
 
 
 class PasteControllerTest extends WebTestCase
@@ -14,7 +16,7 @@ class PasteControllerTest extends WebTestCase
     {
         $client = self::createClient();
         $client->request('GET', $url);
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
 
     public function urlProvider()
@@ -31,9 +33,8 @@ class PasteControllerTest extends WebTestCase
     {
         $client = self::createClient();
         $crawler = $client->request('GET', '/paste/');
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
-        
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+                
         $nbPastes = $crawler->filter('tr')->count();
         $crawler = $client->request('GET', '/paste/new');
         $this->assertTrue($client->getResponse()
@@ -52,11 +53,11 @@ class PasteControllerTest extends WebTestCase
             )
         ));
         $crawler = $client->submit($form);
-        $this->assertTrue($client->getResponse()
-            ->isRedirect());
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        
         $crawler = $client->request('GET', '/paste/');
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        
         $this->assertGreaterThan($nbPastes, $crawler->filter('tr')
             ->count());
     }
