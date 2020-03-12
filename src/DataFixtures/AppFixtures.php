@@ -12,14 +12,17 @@
 namespace App\DataFixtures;
 
 use App\Entity\Todo;
+use App\Entity\Paste;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use DateTime;
 
 class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
         $this->loadTodos($manager);
+        $this->loadPastes($manager);
     }
     
     private function loadTodos(ObjectManager $manager)
@@ -40,6 +43,23 @@ class AppFixtures extends Fixture
         yield ['devenir un pro du Web', false];
         yield ['monter une startup',  false];
         yield ['devenir maître du monde', false];
+        
+    }
+    private function loadPastes(ObjectManager $manager)
+    {
+        foreach ($this->getPastesData() as [$content, $type]) {
+            $paste = new Paste();
+            $paste->setContent($content);
+            $paste->setContentType($type);
+            $paste->setCreated(new DateTime());
+            $manager->persist($paste);
+        }
+        $manager->flush();
+    }
+    
+    private function getPastesData()
+    {
+        yield ['https://symfony.com/doc/current/setup.html', "text/html"];
         
     }
     
