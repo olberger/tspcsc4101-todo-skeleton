@@ -12,10 +12,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Todo;
+use App\Entity\Paste;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use App\DataFixtures\ProjectFixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+
+
 
 class AppFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -48,6 +50,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
         yield ['devenir maître du monde', false, null];
         
     }
+
     
     public function getDependencies()
     {

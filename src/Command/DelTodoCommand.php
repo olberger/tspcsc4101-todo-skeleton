@@ -17,23 +17,23 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+use Doctrine\Persistence\ManagerRegistry;
+
+
 /**
  * Command Todo
  */
 class DelTodoCommand extends Command
-{
+{    
+    private $doctrineManager;
     private $todoRepository;
     
-    /**
-     * @var EntityManager
-     */
-    private $em;
-    
-    public function __construct(ContainerInterface $container)
+    public function __construct(ManagerRegistry $doctrineManager)
     {
+        $this->doctrineManager = $doctrineManager;
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
+        
         parent::__construct();
-        $this->em = $container->get('doctrine')->getManager();
-        $this->todoRepository = $container->get('doctrine')->getManager()->getRepository(Todo::class);
     }
     
     protected function configure()
@@ -64,7 +64,8 @@ class DelTodoCommand extends Command
             $this->em->flush();
         } else {
             $errOutput->writeln('<error>no todos found with id "'. $id .'"!</error>');
+            return 1;
         }
-        
+        return 0;
     }
 }

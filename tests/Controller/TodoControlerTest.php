@@ -2,19 +2,28 @@
 namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
+use App\Entity\User;
 
 
 class TodoControllerTest extends WebTestCase
 {
+    private $client = null;
     
+    public function setUp()
+    {
+        $this->client = static::createClient();
+    }
     /**
      * @dataProvider urlProvider
      */
-    public function testPageIsSuccessful($url)
+    public function testPublicPageIsSuccessful($url)
     {
-        $client = self::createClient();
+        $client = $this->client;
         $client->request('GET', $url);
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
     public function urlProvider()
@@ -28,18 +37,27 @@ class TodoControllerTest extends WebTestCase
     /**
      * Post a todo : 'title'
      * 'completed'
+     * This test post a new todo and check that the number of lines in index is greater after the creation.
      */
     public function testNew()
     {
-        $client = self::createClient();
+        $this->logIn();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/');
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
-        
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
         $nbTodos = $crawler->filter('tr')->count();
+        $crawler = $client->request('GET', '/login');
+        $buttonCrawlernode = $crawler->selectButton('Save');
+        $form = $buttonCrawlernode->form(array(
+            '' => array(
+                'email' => 'anna@localhost',
+                'passwd' => 'anna',
+                '_token' => $this->csrf_token('authenticate')
+            )
+        ));
         $crawler = $client->request('GET', '/todo/new');
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        
         $this->assertGreaterThan(0, $crawler->filter('form:contains("Save")')
             ->count());
         $buttonCrawlernode = $crawler->selectButton('Save');
@@ -50,11 +68,9 @@ class TodoControllerTest extends WebTestCase
             )
         ));
         $crawler = $client->submit($form);
-        $this->assertTrue($client->getResponse()
-            ->isRedirect());
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $crawler = $client->request('GET', '/todo/');
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
         $this->assertGreaterThan($nbTodos, $crawler->filter('tr')
             ->count());
     }
@@ -64,10 +80,11 @@ class TodoControllerTest extends WebTestCase
      */
     public function testDelete()
     {
-        $client = self::createClient();
+        $client = $this->client;
+        $this->logIn();
         $crawler = $client->request('GET', '/todo/');
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        
         $nbTodos = $crawler->filter('tr')->count();
         $this->assertGreaterThan(0, $nbTodos);
         $trCrawler = $crawler->filter('tr')
@@ -76,8 +93,8 @@ class TodoControllerTest extends WebTestCase
         $todoId = $trCrawler->first()->text();
         $this->assertGreaterThan(0, $todoId);
         $crawler = $client->request('GET', '/todo/' . $todoId);
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()
+            ->getStatusCode());
         $this->assertGreaterThan(0, $crawler->filter('form:contains("Delete")')
             ->count());
         $buttonCrawlernode = $crawler->selectButton('Delete');
@@ -86,8 +103,8 @@ class TodoControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()
             ->isRedirect());
         $crawler = $client->request('GET', '/todo/');
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()
+            ->getStatusCode());
         $this->assertGreaterThan($crawler->filter('tr')
             ->count(), $nbTodos);
     }
@@ -97,7 +114,9 @@ class TodoControllerTest extends WebTestCase
      */
     public function testUpdate()
     {
-        $client = self::createClient();
+        $client = $this->client;
+        $this->logIn();
+        
         $crawler = $client->request('GET', '/todo/');
         $this->assertTrue($client->getResponse()
             ->isSuccessful());
@@ -109,8 +128,8 @@ class TodoControllerTest extends WebTestCase
         $todoId = $trCrawler->first()->text();
         $this->assertGreaterThan(0, $todoId);
         $crawler = $client->request('GET', '/todo/' . $todoId . '/edit');
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
+        $this->assertSame(Response::HTTP_OK, $this->client->getResponse()
+            ->getStatusCode());
         $this->assertGreaterThan(0, $crawler->filter('form:contains("Update")')
             ->count());
         $buttonCrawlernode = $crawler->selectButton('Update');
@@ -131,5 +150,30 @@ class TodoControllerTest extends WebTestCase
         $tdCrawler = $trCrawler->children(); // contains th and td
         $this->assertEquals($tdCrawler->last()
             ->text(), 'Yes');
+    }
+    /* 
+     * Login Function to test methods reserved to Admin
+     */
+    private function logIn()
+    {
+        $session = $this->client->getContainer()->get('session');
+        
+        $firewallName = 'main';
+        // if you don't define multiple connected firewalls, the context defaults to the firewall name
+        // See https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
+        $firewallContext = 'guard';
+        
+        // you may need to use a different token class depending on your application.
+        // for example, when using Guard authentication you must instantiate PostAuthenticationGuardToken
+        $admin = new User();
+        $admin->setEmail('anna@localhost');
+        $admin->setPassword('anna');
+        $admin->addRole('ROLE_ADMIN');
+        $token = new PostAuthenticationGuardToken($admin, 'guard', $admin->getRoles());
+        $session->set('_security_'.$firewallContext, serialize($token));
+        $session->save();
+        
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
     }
 }
