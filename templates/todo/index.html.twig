@@ -1,3 +1,4 @@
+
 {% extends 'baselayout.html.twig' %}
 
 {% block title %}Todo index{% endblock %}
@@ -29,6 +30,7 @@
             {% if todo.completed %}
             </del>
             {% endif %}
+
                 <td>{{ todo.completed }}</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>
