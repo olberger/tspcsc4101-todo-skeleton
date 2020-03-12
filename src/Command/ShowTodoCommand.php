@@ -9,17 +9,29 @@
 namespace App\Command;
 
 use App\Entity\Todo;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Command ShowTodo
  */
-class ShowTodoCommand extends ContainerAwareCommand
+class ShowTodoCommand extends Command
 {    
+    private $doctrineManager;
+    private $todoRepository;
+    
+    public function __construct(ManagerRegistry $doctrineManager)
+    {
+        $this->doctrineManager = $doctrineManager;
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
+        
+        parent::__construct();
+    }
+    
     protected function configure()
     {
         $this
@@ -38,22 +50,17 @@ class ShowTodoCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
-        
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        
+
         $id = $input->getArgument('todoId');
-        $todo = $em->getRepository(Todo::class)->find($id);
+        $todo = $this->todoRepository->find($id);
         
         if ($todo) {
             // $output->writeln($todo->__toString());
-            $output->write($todo->getId() .": ". $todo->getTitle());
-            $output->writeln(" ".$todo->getCompleted() ? '(completed)': '(not complete)');
-            $output->writeln("\t created: ".$todo->getCreated()->format('Y-m-d H:i:s'));
-            $output->writeln("\t updated: ".$todo->getUpdated()->format('Y-m-d H:i:s'));
-            
+            $output->writeln($todo);
+            return 1;
         } else {
             $errOutput->writeln('<error>no todos found with id "'. $id .'"!</error>');
         }
-        
+        return 0;
     }
 }

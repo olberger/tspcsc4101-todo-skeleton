@@ -17,6 +17,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class ProjectFixtures extends Fixture
 {
+    public const CSC4101_PROJECT_REFERENCE = 'csc4101-project';
+    public const CSC4102_PROJECT_REFERENCE = 'csc4102-project';
+    
     public function load(ObjectManager $manager)
     {
         $this->loadProjects($manager);
@@ -24,11 +27,13 @@ class ProjectFixtures extends Fixture
     
     private function loadProjects(ObjectManager $manager)
     {
-        foreach ($this->getProjectsData() as [$title, $description]) {
+        foreach ($this->getProjectsData() as [$title, $description, $reference]) {
             $project = new Project();
             $project->setTitle($title);
             $project->setDescription($description);
             $manager->persist($project);
+            
+            $this->addReference($reference, $project);
         }
         $manager->flush();
     }
@@ -36,8 +41,8 @@ class ProjectFixtures extends Fixture
     private function getProjectsData()
     {
         // project = [title, description];
-        yield ['CSC4101', "Architectures et applications Web"];
-        yield ['CSC4102', "Introduction au Génie Logiciel Orienté Objet"];
+        yield ['CSC4101', "Architectures et applications Web", self::CSC4101_PROJECT_REFERENCE];
+        yield ['CSC4102', "Introduction au Génie Logiciel Orienté Objet", self::CSC4102_PROJECT_REFERENCE];
     }
     
     

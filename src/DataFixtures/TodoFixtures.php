@@ -14,8 +14,9 @@ namespace App\DataFixtures;
 use App\Entity\Todo;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class AppFixtures extends Fixture
+class TodoFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -24,11 +25,15 @@ class AppFixtures extends Fixture
     
     private function loadTodos(ObjectManager $manager)
     {
-        foreach ($this->getTodosData() as [$title, $completed]) {
+        foreach ($this->getTodosData() as [$title, $completed, $project]) {
             $todo = new Todo();
             $todo->setTitle($title);
             $todo->setCompleted($completed);
             $manager->persist($todo);
+            
+            if($project) {
+                $todo->setProject($project);
+            }
         }
         $manager->flush();
     }
@@ -36,12 +41,17 @@ class AppFixtures extends Fixture
     private function getTodosData()
     {
         // todo = [title, completed];
-        yield ['apprendre les bases de PHP', true];
-        yield ['devenir un pro du Web', false];
-        yield ['monter une startup',  false];
-        yield ['devenir maître du monde', false];
+        yield ['apprendre les bases de PHP', true, $this->getReference(ProjectFixtures::CSC4101_PROJECT_REFERENCE)];
+        yield ['devenir un pro du Web', false, $this->getReference(ProjectFixtures::CSC4101_PROJECT_REFERENCE)];
+        yield ['monter une startup',  false, $this->getReference(ProjectFixtures::CSC4102_PROJECT_REFERENCE)];
+        yield ['devenir maître du monde', false, null];
         
     }
     
-    
+    public function getDependencies()
+    {
+        return array(
+            ProjectFixtures::class,
+        );
+    }
 }

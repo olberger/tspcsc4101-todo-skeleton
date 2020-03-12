@@ -6,6 +6,8 @@ use App\Entity\Paste;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class PasteType extends AbstractType
 {
@@ -15,6 +17,11 @@ class PasteType extends AbstractType
             ->add('content')
             ->add('created')
             ->add('content_type')
+            ->add('imageName', TextType::class,  ['disabled' => true])
+            ->add('imageFile', VichImageType::class, [
+                'required' => false,
+                'delete_label'          => 'Delete image ?'
+            ])
         ;
     }
 

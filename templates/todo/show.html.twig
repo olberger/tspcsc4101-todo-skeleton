@@ -1,3 +1,4 @@
+
 {% extends 'baselayout.html.twig' %}
 
 {% block title %}Todo {{todo.id}}{% endblock %}
@@ -60,4 +61,5 @@
     {{ include('todo/_delete_form.html.twig') }}
     {% endif %}
     <a href="{{ path('todo_index') }}">back to list</a>
+    
 {% endblock %}

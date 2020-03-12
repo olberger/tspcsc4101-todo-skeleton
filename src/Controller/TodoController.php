@@ -11,7 +11,7 @@ namespace App\Controller;
 use App\Entity\Project;
 use App\Entity\Todo;
 use App\Form\TodoType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,7 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  * Controleur Todo
  * @Route("/todo")
  */
-class TodoController extends Controller
+class TodoController extends AbstractController
 {    
     /**
      * Lists all todo entities.
@@ -55,6 +55,7 @@ class TodoController extends Controller
         // $todos = $em->getRepository(Todo::class)->findByCompleted(false);
         $todos = $em->getRepository(Todo::class)->findAll(false);
         
+
         return $this->render('todo/active-index.html.twig', array(
             'todos' => $todos,
         ));
@@ -66,6 +67,7 @@ class TodoController extends Controller
      */
     public function showAction(Todo $todo): Response
     {
+
         return $this->render('todo/show.html.twig', array(
             'todo' => $todo,
         ));
@@ -73,7 +75,7 @@ class TodoController extends Controller
     
     /**
      * @Route("/new", name="todo_new", methods="GET|POST")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function new(Request $request): Response
     {
@@ -104,11 +106,14 @@ class TodoController extends Controller
     public function add(Request $request, Project $project): Response
     {
         $todo = new Todo();
+        // already set a project, so as to not need add that field in the form (in TodoType)
+        $todo->setProject($project);
+        
         $form = $this->createForm(TodoType::class, $todo);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $todo->setCreated(new \DateTime());
-            $project->addTodo($todo);
+            
             $em = $this->getDoctrine()->getManager();
             $em->persist($todo);
             $em->flush();
@@ -128,7 +133,7 @@ class TodoController extends Controller
     
     /**
      * @Route("/{id}/edit", name="todo_edit", methods="GET|POST")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function edit(Request $request, Todo $todo): Response
     {
@@ -154,7 +159,7 @@ class TodoController extends Controller
     
     /**
      * @Route("/{id}", name="todo_delete", methods="DELETE")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function delete(Request $request, Todo $todo): Response
     {

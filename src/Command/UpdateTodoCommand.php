@@ -10,18 +10,32 @@ namespace App\Command;
 
 use App\Entity\Todo;
 use \DateTime;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
+use Doctrine\Persistence\ManagerRegistry;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Command Todo
  */
-class UpdateTodoCommand extends ContainerAwareCommand
+class UpdateTodoCommand extends Command
 {    
+    private $doctrineManager;
+    private $todoRepository;
+    
+    public function __construct(ManagerRegistry $doctrineManager)
+    {
+        $this->doctrineManager = $doctrineManager;
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
+        
+        parent::__construct();
+    }
+    
     protected function configure()
     {
         $this
@@ -43,20 +57,20 @@ class UpdateTodoCommand extends ContainerAwareCommand
     
         $id = $input->getArgument('todoId');
         
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $todo = $em->getRepository(Todo::class)->find($id);
+        $todo = $this->todoRepository->find($id);
         
         if ($todo) {
             if(! $todo->getCompleted()) {
                 $todo->setCompleted(true);
                 $todo->setUpdated(new \DateTime());
-                $em->flush();
+                $this->em->flush();
             } else {
                 $output->writeln('Todo '. $id .' already completed. Nothing done.');
             }
         } else {
             $errOutput->writeln('<error>no todos found with id "'. $id .'"!</error>');
+            return 1;
         }
-    
+        return 0;
     }
 }

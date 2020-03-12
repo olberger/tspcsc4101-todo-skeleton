@@ -9,18 +9,33 @@
 namespace App\Command;
 
 use App\Entity\Todo;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+use Doctrine\Persistence\ManagerRegistry;
+
 
 /**
  * Command Todo
  */
-class DelTodoCommand extends ContainerAwareCommand
+class DelTodoCommand extends Command
 {    
+    private $doctrineManager;
+    private $todoRepository;
+    
+    public function __construct(ManagerRegistry $doctrineManager)
+    {
+        $this->doctrineManager = $doctrineManager;
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
+        
+        parent::__construct();
+    }
+    
     protected function configure()
     {
         $this
@@ -42,15 +57,15 @@ class DelTodoCommand extends ContainerAwareCommand
         
         $id = $input->getArgument('todoId');
         
-        $em = $this->getContainer()->get('doctrine')->getManager(); 
-        $todo = $em->getRepository(Todo::class)->find($id);
+        $todo = $this->todoRepository->find($id);
         
         if ($todo) {
-            $em->remove($todo);
-            $em->flush();
+            $this->em->remove($todo);
+            $this->em->flush();
         } else {
             $errOutput->writeln('<error>no todos found with id "'. $id .'"!</error>');
+            return 1;
         }
-        
+        return 0;
     }
 }

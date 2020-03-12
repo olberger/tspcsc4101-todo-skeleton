@@ -10,18 +10,23 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TodoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
+    {       
         $builder
-            ->add('title')
-            ->add('completed')
-        ;
-        // We explicitely avoid setting 'entry_options' to array('label' => false) in the ProjectType
-        // so that the label we get here isn't null when we're in a collection of sub forms
-        // where its value is '__name__value__'
-        if ($options['label'] != '__name__label__') {
-            $builder->add('project');
-        }
+        ->add('title')
+        ->add('completed');
 
+        if ( array_key_exists('data', $options) ) {
+            // Check if the Todo::project must be modifiable in the form
+            $todo = $options['data'];
+            // if this is a new todo being created
+            if ( $todo && ! $todo->getId() ) {
+                // and if we aren't already in the context of a project 
+                if (! $todo->getProject() ) {
+                    // add the possibility to add it to chosen project
+                    $builder->add('project');
+                }
+            }
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
