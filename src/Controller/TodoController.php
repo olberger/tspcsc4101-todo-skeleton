@@ -48,6 +48,7 @@ class TodoController extends AbstractController
         
         $todos = $em->getRepository(Todo::class)->findByCompleted(false);
         
+
         return $this->render('todo/active-index.html.twig', array(
             'todos' => $todos,
         ));
@@ -59,6 +60,7 @@ class TodoController extends AbstractController
      */
     public function showAction(Todo $todo): Response
     {
+
         return $this->render('todo/show.html.twig', array(
             'todo' => $todo,
         ));
