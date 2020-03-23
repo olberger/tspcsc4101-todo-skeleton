@@ -5,9 +5,8 @@
 
 {% block main %}
     <h1>Todo index</h1>
-
-    <table class="table">
-        <thead>
+    <table class="table table-sm">
+        <thead class="thead-light">
             <tr>
                 <th>Id</th>
                 <th>Todo</th>
@@ -43,6 +42,7 @@
             </tr>
         {% endfor %}
         </tbody>
+        
     </table>
-    
+
 {% endblock %}
