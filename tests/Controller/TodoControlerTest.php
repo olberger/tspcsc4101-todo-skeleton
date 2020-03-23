@@ -16,12 +16,14 @@ class TodoControllerTest extends WebTestCase
         $client->request('GET', $url);
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
+
     public function urlProvider()
     {
         yield ['/todo/'];
         yield ['/todo/list'];
         yield ['/todo/list-active'];
         yield ['/todo/1'];
+        // ...
     }
     public function testIndexPage()
     {
