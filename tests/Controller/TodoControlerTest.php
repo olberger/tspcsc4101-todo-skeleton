@@ -6,17 +6,23 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TodoControllerTest extends WebTestCase
 {
+    private $client = null;
     
+    public function setUp()
+    {
+        $this->client = static::createClient();
+    }
     /**
      * @dataProvider urlProvider
      */
     public function testPageIsSuccessful($url)
     {
-        $client = self::createClient();
+        $client = $this->client;
         $client->request('GET', $url);
         $this->assertTrue($client->getResponse()
             ->isSuccessful());
     }
+
     public function urlProvider()
     {
         yield ['/todo/'];
@@ -26,8 +32,8 @@ class TodoControllerTest extends WebTestCase
     }
     public function testIndexPage()
     {
-        $client = self::createClient();
-        $crawler = $client->request('GET', '/');
+       $client = $this->client;
+       $crawler = $client->request('GET', '/');
         /* is there 2 link to load css pages */
         $this->assertGreaterThan(1, $crawler->filter('link')
             ->count());
@@ -47,7 +53,7 @@ class TodoControllerTest extends WebTestCase
 
     public function testListContainsTable()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
         $this->assertGreaterThan(0, $crawler->filter('table')
             ->count());
@@ -55,7 +61,7 @@ class TodoControllerTest extends WebTestCase
 
     public function testListTableContainsLink()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
         $this->assertGreaterThan(0, $crawler->filter('html a')
             ->count());
@@ -63,7 +69,7 @@ class TodoControllerTest extends WebTestCase
 
     public function testClickOnFirstTodo()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
         $link = $crawler->filter('a:contains("show")')
             -> // find all links with the text "show"
@@ -79,7 +85,7 @@ class TodoControllerTest extends WebTestCase
 
     public function testFirstTodoContainsBackLink()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
         // find all links with the text "show"
         // select the first link in the list
@@ -97,7 +103,7 @@ class TodoControllerTest extends WebTestCase
 
     public function testListActiveContainsTable()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list-active');
         $this->assertGreaterThan(0, $crawler->filter('html table')
             ->count());
@@ -105,7 +111,7 @@ class TodoControllerTest extends WebTestCase
 
     public function testListActiveContainsLink()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list-active');
         $this->assertGreaterThan(0, $crawler->filter('html a')
             ->count());
@@ -113,7 +119,7 @@ class TodoControllerTest extends WebTestCase
 
     public function testClickOnFirstActiveTodo()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list-active');
         // find all links with the text "show"
         // select the first link in the list
@@ -132,9 +138,9 @@ class TodoControllerTest extends WebTestCase
      */
     public function testNew()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/');
-        $nbPastes = $crawler->filter('tr')->count();
+        $nbTodos = $crawler->filter('tr')->count();
         $crawler = $client->request('GET', '/todo/new');
         $this->assertTrue($client->getResponse()
             ->isSuccessful());
@@ -151,15 +157,16 @@ class TodoControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()
             ->isRedirect());
         $crawler = $client->request('GET', '/todo/');
-        $this->assertGreaterThan($nbPastes, $crawler->filter('tr')
+        $this->assertGreaterThan($nbTodos, $crawler->filter('tr')
             ->count());
     }
+    
     /**
      * Delete last Todo
      */
     public function testDelete()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/');
         $nbTodos = $crawler->filter('tr')->count();
         $this->assertGreaterThan(0, $nbTodos);
@@ -190,10 +197,8 @@ class TodoControllerTest extends WebTestCase
      */
     public function testUpdate()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/');
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
         $nbTodos = $crawler->filter('tr')->count();
         $this->assertGreaterThan(0, $nbTodos);
         $trCrawler = $crawler->filter('tr')
@@ -215,7 +220,7 @@ class TodoControllerTest extends WebTestCase
             );
         $client->submit($form);
         $this->assertTrue($client->getResponse()
-            ->isRedirect()); 
+            ->isRedirect());
         
         $crawler = $client->request('GET', '/todo/' . $todoId);
         $this->assertTrue($client->getResponse()->isSuccessful());
