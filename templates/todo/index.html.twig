@@ -5,13 +5,12 @@
 
 {% block main %}
     <h1>Todo index</h1>
-
-    <table class="table">
-        <thead>
+    <table class="table table-sm">
+        <thead class="thead-light">
             <tr>
                 <th>Id</th>
                 <th>Todo</th>
-                <th>Completed</th>
+<!--                 <th>Completed</th> -->
                 <th>Created</th>
                 <th>Updated</th>
                 <td> &nbsp;</td>
@@ -31,7 +30,7 @@
             </del>
             {% endif %}
 
-                <td>{{ todo.completed }}</td>
+ <!--               <td>{{ todo.completed ? 'oui' : 'non' }}</td> -->
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>
 
@@ -39,7 +38,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
