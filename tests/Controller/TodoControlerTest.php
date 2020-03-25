@@ -142,8 +142,8 @@ class TodoControllerTest extends WebTestCase
      */
     public function testNew()
     {
-        $this->logIn();
         $client = $this->client;
+        $this->login();
         $crawler = $client->request('GET', '/todo/');
         $nbTodos = $crawler->filter('tr')->count();
         $crawler = $client->request('GET', '/todo/new');
@@ -153,8 +153,10 @@ class TodoControllerTest extends WebTestCase
             ->count());
         $buttonCrawlernode = $crawler->selectButton('Save');
         $form = $buttonCrawlernode->form(array(
-                           'title' => 'Test todo',
+            'todo' => array(
+                'title' => 'Test todo',
                 'completed' => False,
+            )
         ));
         $crawler = $client->submit($form);
         $this->assertTrue($client->getResponse()
@@ -170,7 +172,7 @@ class TodoControllerTest extends WebTestCase
     public function testDelete()
     {
         $client = $this->client;
-        $this->logIn();
+        $this->login();
         $crawler = $client->request('GET', '/todo/');
         $nbTodos = $crawler->filter('tr')->count();
         $this->assertGreaterThan(0, $nbTodos);
@@ -202,8 +204,7 @@ class TodoControllerTest extends WebTestCase
     public function testUpdate()
     {
         $client = $this->client;
-        $this->logIn();
-        
+        $this->login();
         $crawler = $client->request('GET', '/todo/');
         $nbTodos = $crawler->filter('tr')->count();
         $this->assertGreaterThan(0, $nbTodos);
@@ -243,17 +244,11 @@ class TodoControllerTest extends WebTestCase
         $session = $this->client->getContainer()->get('session');
         
         $firewallName = 'main';
-        // if you don't define multiple connected firewalls, the context defaults to the firewall name
-        // See https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
-        $firewallContext = 'guard';
-        
-        // you may need to use a different token class depending on your application.
-        // for example, when using Guard authentication you must instantiate PostAuthenticationGuardToken
-        $admin = new User();
-        $admin->setEmail('anna@localhost');
-        $admin->setPassword('anna');
-        $admin->addRole('ROLE_ADMIN');
-        $token = new PostAuthenticationGuardToken($admin, 'guard', $admin->getRoles());
+        $firewallContext = $firewallName;
+        $doctrine = $this->client->getContainer()->get('doctrine');
+        $em = $doctrine->getManager();
+        $anna = $em->getRepository(User::class)->findOneByEmail('anna@localhost');
+        $token = new PostAuthenticationGuardToken($anna, $firewallName, $anna->getRoles());
         $session->set('_security_'.$firewallContext, serialize($token));
         $session->save();
         
