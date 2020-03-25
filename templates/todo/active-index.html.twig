@@ -25,7 +25,11 @@
                 <td>{{ todo.completed }}</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>
-                <td><a href="{{ path('todo_show', {'id': todo.id}) }}">show</a></td>
+                <td><a href="{{ path('todo_show', {'id': todo.id}) }}">show</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('todo_edit', {'id': todo.id}) }}">edit</a>
+                    {% endif %}
+                 </td>
             </tr>
             {% endif %}
         {% else %}
