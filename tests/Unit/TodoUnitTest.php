@@ -17,7 +17,6 @@ class TodoUnitTest extends TestCase
         $todo->setUpdated($date);
         $todo->setTitle($text);
         
-        // assert that your calculator added the numbers correctly!
         $this->assertEquals($date, $todo->getCreated());
         $this->assertEquals($date, $todo->getUpdated());
         $this->assertEquals($text, $todo->getTitle());
