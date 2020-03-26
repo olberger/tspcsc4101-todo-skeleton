@@ -58,12 +58,12 @@
     
     </div><!-- form-horizontal </form>  --> 
 
-    {% if is_granted('ROLE_ADMIN') %}
+    {% if is_granted('ROLE_USER') %}
 
-    {{ include('todo/_edit_form.html.twig') }}
+    <a href="{{ path('todo_edit', {'id': todo.id}) }}"><button class="btn btn-lg btn-warning">Edit</button></a>
 
     {{ include('todo/_delete_form.html.twig') }}
     {% endif %}
-    <a href="{{ path('todo_index') }}">back to list</a>
+    <a href="{{ path('todo_index') }}"><button class="btn btn-lg btn-primary">Back to list</button></a>
     
 {% endblock %}

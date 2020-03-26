@@ -28,6 +28,7 @@ class PasteController extends AbstractController
 
     /**
      * @Route("/new", name="paste_new", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function new(Request $request): Response
     {
@@ -69,6 +70,7 @@ class PasteController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="paste_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function edit(Request $request, Paste $paste): Response
     {
@@ -92,6 +94,7 @@ class PasteController extends AbstractController
 
     /**
      * @Route("/{id}", name="paste_delete", methods={"DELETE"})
+     * @IsGranted("ROLE_USER")
      */
     public function delete(Request $request, Paste $paste): Response
     {
