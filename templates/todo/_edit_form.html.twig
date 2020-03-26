@@ -1,4 +1,0 @@
-<form method="post" action="{{ path('todo_edit', {'id': todo.id}) }}">
-    <input type="hidden" name="_token" value="{{ csrf_token('edit' ~ todo.id) }}">
-    <button class="btn">Edit</button>
-</form>

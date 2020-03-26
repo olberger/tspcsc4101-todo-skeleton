@@ -1,4 +1,3 @@
-
 {% extends 'baselayout.html.twig' %}
 
 {% block title %}Todo index{% endblock %}
@@ -14,7 +13,7 @@
                 <th>Created</th>
                 <th>Updated</th>
                 <th>Project</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -37,9 +36,9 @@
                 	{% endif %}
                 </td>  
                 <td>
-                    <a href="{{ path('todo_show', {'id': todo.id}) }}">show</a>
-                    {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('todo_edit', {'id': todo.id}) }}">edit</a>
+                    <a href="{{ path('todo_show', {'id': todo.id}) }}"><button class="btn btn-lg btn-primary">Show</button></a>
+                    {% if is_granted('ROLE_USER') %}
+                    <a href="{{ path('todo_edit', {'id': todo.id}) }}"><button class="btn btn-lg btn-warning">Edit</button></a>
                     {% endif %}
                 </td>
             </tr>
@@ -51,8 +50,8 @@
         </tbody>
     </table>
 
-    {% if is_granted('ROLE_ADMIN') %}
-    <a href="{{ path('todo_new') }}">Create new</a>
+    {% if is_granted('ROLE_USER') %}
+    <a href="{{ path('todo_new') }}"><button class="btn btn-lg btn-primary">Create new</button></a>
     {% endif %}
 
 {% endblock %}
