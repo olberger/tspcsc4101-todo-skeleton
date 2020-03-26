@@ -74,7 +74,7 @@ class TodoController extends AbstractController
     
     /**
      * @Route("/new", name="todo_new", methods="GET|POST")
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_USER")
      */
     public function new(Request $request): Response
     {
@@ -102,7 +102,7 @@ class TodoController extends AbstractController
     
     /**
      * @Route("/{id}/edit", name="todo_edit", methods="GET|POST")
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_USER")
      */
     public function edit(Request $request, Todo $todo): Response
     {
@@ -128,7 +128,7 @@ class TodoController extends AbstractController
     
     /**
      * @Route("/{id}", name="todo_delete", methods="DELETE")
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("ROLE_USER")
      */
     public function delete(Request $request, Todo $todo): Response
     {

@@ -9,11 +9,10 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Todo</th>
-                <th>Completed</th>
+                <th>Title</th>
                 <th>Created</th>
                 <th>Updated</th>
-                <td> &nbsp;</td>
+                <td>Actions</td>
             </tr>
         </thead>
         <tbody>
@@ -22,12 +21,11 @@
             <tr>
                 <td>{{ todo.id }}</td>
                 <td>{{ todo.title }}</td>
-                <td>{{ todo.completed }}</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>
-                <td><a href="{{ path('todo_show', {'id': todo.id}) }}">show</a>
-                    {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('todo_edit', {'id': todo.id}) }}">edit</a>
+                <td><a href="{{ path('todo_show', {'id': todo.id}) }}"><button class="btn btn-lg btn-primary">Show</button></a>
+                    {% if is_granted('ROLE_USER') %}
+                    <a href="{{ path('todo_edit', {'id': todo.id}) }}"><button class="btn btn-lg btn-warning">Edit</button></a>
                     {% endif %}
                  </td>
             </tr>
@@ -39,5 +37,9 @@
         {% endfor %}
         </tbody>
     </table>
-    
+
+    {% if is_granted('ROLE_USER') %}
+    <a href="{{ path('todo_new') }}"><button class="btn btn-lg btn-primary">Create new</button></a>
+    {% endif %}
+
 {% endblock %}

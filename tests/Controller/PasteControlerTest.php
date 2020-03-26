@@ -3,18 +3,25 @@ namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
-
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
+use App\Entity\User;
 
 
 class PasteControllerTest extends WebTestCase
 {
+    private $client = null;
     
+    public function setUp() : void
+    {
+        $this->client = static::createClient();
+    }
     /**
      * @dataProvider urlProvider
      */
     public function testPageIsSuccessful($url)
     {
-        $client = self::createClient();
+        $client = $this->client;
         $client->request('GET', $url);
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
@@ -23,7 +30,6 @@ class PasteControllerTest extends WebTestCase
     {
         yield ['/paste/'];
         yield ['/paste/1'];
-        // ...
     }
     /**
      * Post a paste : 'Content', 'Created', 'content-type'
@@ -31,7 +37,8 @@ class PasteControllerTest extends WebTestCase
      */
     public function testNew()
     {
-        $client = self::createClient();
+        $client = $this->client;
+        self::login();
         $crawler = $client->request('GET', '/paste/');
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
                 
@@ -63,11 +70,12 @@ class PasteControllerTest extends WebTestCase
     }
     
     /**
-     * Delete last Todo
+     * Delete last Paste
      */
     public function testDelete()
     {
-        $client = self::createClient();
+        $client = $this->client;
+        self::login();
         $crawler = $client->request('GET', '/paste/');
         $this->assertTrue($client->getResponse()
             ->isSuccessful());
@@ -93,5 +101,23 @@ class PasteControllerTest extends WebTestCase
             ->isSuccessful());
         $this->assertGreaterThan($crawler->filter('tr')
             ->count(), $nbPastes);
+    }
+    /*
+     * Login Function to test methods reserved to Admin
+     */
+    private function logIn()
+    {
+        $session = $this->client->getContainer()->get('session');
+        $firewallName = 'main';
+        $firewallContext = $firewallName;
+        $doctrine = $this->client->getContainer()->get('doctrine');
+        $em = $doctrine->getManager();
+        $anna = $em->getRepository(User::class)->findOneByEmail('anna@localhost');
+        $token = new PostAuthenticationGuardToken($anna, $firewallName, $anna->getRoles());
+        $session->set('_security_'.$firewallContext, serialize($token));
+        $session->save();
+        
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
     }
 }

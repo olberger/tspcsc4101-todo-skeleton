@@ -26,9 +26,10 @@
         </tbody>
     </table>
 
-    <a href="{{ path('paste_index') }}">back to list</a>
-
-    <a href="{{ path('paste_edit', {'id': paste.id}) }}">edit</a>
-
+    {% if is_granted('ROLE_USER') %}
+    <a href="{{ path('paste_edit', {'id': paste.id}) }}"><button class="btn btn-lg btn-warning">Edit</button></a>
     {{ include('paste/_delete_form.html.twig') }}
+    {%  endif %}
+    
+     <a href="{{ path('paste_index') }}"><button class="btn btn-lg btn-primary">Back to list</button></a>
 {% endblock %}
