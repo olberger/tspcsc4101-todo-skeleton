@@ -9,7 +9,9 @@
 namespace App\Controller;
 
 use App\Entity\Todo;
+use App\Form\TodoType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -65,4 +67,75 @@ class TodoController extends AbstractController
             'todo' => $todo,
         ));
     }
+    
+    /**
+     * @Route("/new", name="todo_new", methods="GET|POST")
+     */
+    public function new(Request $request): Response
+    {
+        $todo = new Todo();
+        $form = $this->createForm(TodoType::class, $todo);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $todo->setCreated(new \DateTime());
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($todo);
+            $em->flush();
+            
+            // Make sure message will be displayed after redirect
+            $this->get('session')->getFlashBag()->add('message', 'tâche bien ajoutée');
+            
+            return $this->redirectToRoute('todo_index');
+        }
+        
+        return $this->render('todo/new.html.twig', [
+            'todo' => $todo,
+            'form' => $form->createView(),
+        ]);
+    }
+    
+    
+    /**
+     * @Route("/{id}/edit", name="todo_edit", methods="GET|POST")
+     */
+    public function edit(Request $request, Todo $todo): Response
+    {
+        $form = $this->createForm(TodoType::class, $todo);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $todo->setUpdated(new \DateTime());
+            
+            $this->getDoctrine()->getManager()->flush();
+            
+            $this->get('session')->getFlashBag()->add('message', 'tâche mise à jour');
+            
+            return $this->redirectToRoute('todo_show', ['id' => $todo->getId()]);
+        }
+        
+        return $this->render('todo/edit.html.twig', [
+            'todo' => $todo,
+            'form' => $form->createView(),
+        ]);
+    }
+    
+    /**
+     * @Route("/{id}", name="todo_delete", methods="DELETE")
+     */
+    public function delete(Request $request, Todo $todo): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$todo->getId(), $request->request->get('_token'))) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($todo);
+            $em->flush();
+            
+            // Make sure message will be displayed after redirect
+            $this->get('session')->getFlashBag()->add('message', 'tâche supprimée');
+            
+        }
+        
+        return $this->redirectToRoute('todo_index');
+    }
+    
 }

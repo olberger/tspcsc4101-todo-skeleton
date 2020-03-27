@@ -6,13 +6,18 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PasteControllerTest extends WebTestCase
 {
+    private $client = null;
     
+    public function setUp() : void
+    {
+        $this->client = static::createClient();
+    }
     /**
      * @dataProvider urlProvider
      */
     public function testPageIsSuccessful($url)
     {
-        $client = self::createClient();
+        $client = $this->client;
         $client->request('GET', $url);
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
@@ -21,11 +26,10 @@ class PasteControllerTest extends WebTestCase
     {
         yield ['/paste/'];
         yield ['/paste/1'];
-        // ...
     }
     public function testIndexContainsTable()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/paste/');
         $this->assertGreaterThan(
             0,
@@ -34,7 +38,8 @@ class PasteControllerTest extends WebTestCase
     }
     public function testIndexContainsNew()
     {
-        $client = self::createClient();
+        $client = $this->client;
+
         $crawler = $client->request('GET', '/paste/');
         $this->assertGreaterThan(
             0,
@@ -43,19 +48,19 @@ class PasteControllerTest extends WebTestCase
     }
     public function testIndexContainsEditLink()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/paste/');
         $this->assertGreaterThan(
             0,
-            $crawler->filter('a:contains("edit")')->count()
+            $crawler->filter('a:contains("Edit")')->count()
             );
     }
     public function testFirstPasteContainsLinks()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/paste/');
         $link = $crawler
-        ->filter('a:contains("show")') // find all links with the text "show"
+        ->filter('a:contains("Show")') // find all links with the text "show"
         ->eq(0) // select the first link in the list
         ->link()
         ;
@@ -65,11 +70,11 @@ class PasteControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(
             0,
-            $crawler->filter('a:contains("edit")')->count()
+            $crawler->filter('a:contains("Edit")')->count()
             );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('a:contains("back")')->count()
+            $crawler->filter('a:contains("Back")')->count()
             );
         $this->assertGreaterThan(
             0,
@@ -82,7 +87,7 @@ class PasteControllerTest extends WebTestCase
      */
     public function testNew()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/paste/');
         $nbPastes = $crawler->filter('tr')->count();
         $crawler = $client->request('GET', '/paste/new');
@@ -110,11 +115,11 @@ class PasteControllerTest extends WebTestCase
     }
     
     /**
-     * Delete last Todo
+     * Delete last Paste
      */
     public function testDelete()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/paste/');
         $this->assertTrue($client->getResponse()
             ->isSuccessful());
