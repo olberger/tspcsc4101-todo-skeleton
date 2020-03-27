@@ -6,19 +6,32 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TodoControllerTest extends WebTestCase
 {
+    private $client = null;
     
+    public function setUp() : void
+    {
+        $this->client = static::createClient();
+    }
     /**
      * @dataProvider urlProvider
      */
-    public function testPageIsSuccessful($url)
+    public function testPublicPageIsSuccessful($url)
     {
-        $client = self::createClient();
+        $client = $this->client;
         $client->request('GET', $url);
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
+
+    public function urlProvider()
+    {
+        yield ['/todo/'];
+        yield ['/todo/list'];
+        yield ['/todo/list-active'];
+        yield ['/todo/1'];
+    }
     public function testListContainsTable()
     {
-        $client = self::createClient();
+       $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(
@@ -28,7 +41,7 @@ class TodoControllerTest extends WebTestCase
     }
     public function testListTableContainsLink()
     {
-        $client = self::createClient();
+       $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(
@@ -38,7 +51,7 @@ class TodoControllerTest extends WebTestCase
     }
     public function testClickOnFirstTodo()
     {
-        $client = self::createClient();
+       $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
         $link = $crawler
         ->filter('a:contains("show")') // find all links with the text "Greet"
@@ -54,7 +67,7 @@ class TodoControllerTest extends WebTestCase
 
     public function testFirstTodoContainsBackLink()
     {
-        $client = self::createClient();
+       $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
         $link = $crawler
         ->filter('a:contains("show")') // find all links with the text "show"
@@ -73,7 +86,7 @@ class TodoControllerTest extends WebTestCase
     }
     public function testListActiveContainsTable()
     {
-        $client = self::createClient();
+       $client = $this->client;
         $crawler = $client->request('GET', '/todo/list-active');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(
@@ -83,7 +96,7 @@ class TodoControllerTest extends WebTestCase
     }
     public function testListTableActiveContainsLink()
     {
-        $client = self::createClient();
+       $client = $this->client;
         $crawler = $client->request('GET', '/todo/list-active');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(
@@ -93,7 +106,7 @@ class TodoControllerTest extends WebTestCase
     }
     public function testClickOnFirstActiveTodo()
     {
-        $client = self::createClient();
+       $client = $this->client;
         $crawler = $client->request('GET', '/todo/list-active');
         $link = $crawler
         ->filter('a:contains("show")') // find all links with the text "show"
@@ -106,12 +119,5 @@ class TodoControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         
     }
-    public function urlProvider()
-    {
-        yield ['/todo/'];
-        yield ['/todo/list'];
-        yield ['/todo/list-active'];
-        yield ['/todo/1'];
-        // ...
-    }
+
 }
