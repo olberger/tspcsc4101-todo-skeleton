@@ -19,8 +19,7 @@ class TodoControllerTest extends WebTestCase
     {
         $client = $this->client;
         $client->request('GET', $url);
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
+        $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
     public function urlProvider()
@@ -79,8 +78,7 @@ class TodoControllerTest extends WebTestCase
 
         // and click it
         $crawler = $client->click($link);
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
+        $this->assertTrue($client->getResponse()->isSuccessful());
     }
 
     public function testFirstTodoContainsBackLink()
