@@ -31,6 +31,65 @@ class PasteControllerTest extends WebTestCase
         yield ['/paste/'];
         yield ['/paste/1'];
     }
+    public function testIndexContainsTable()
+    {
+        $client = $this->client;
+        $crawler = $client->request('GET', '/paste/');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('table')->count()
+            );
+    }
+    public function testIndexContainsNew()
+    {
+        $client = $this->client;
+        self::login();
+        
+        $crawler = $client->request('GET', '/paste/');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('a[href="/paste/new"]')->count()
+            );
+    }
+    public function testIndexContainsEditLink()
+    {
+        $client = $this->client;
+        self::login();
+        
+        $crawler = $client->request('GET', '/paste/');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('a:contains("Edit")')->count()
+            );
+    }
+    public function testFirstPasteContainsLinks()
+    {
+        $client = $this->client;
+        self::login();
+        
+        $crawler = $client->request('GET', '/paste/');
+        $link = $crawler
+        ->filter('a:contains("Show")') // find all links with the text "show"
+        ->eq(0) // select the first link in the list
+        ->link()
+        ;
+        
+        // and click it
+        $crawler = $client->click($link);
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('a:contains("Edit")')->count()
+            );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('a:contains("Back")')->count()
+            );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('form input[value="DELETE"]')->count()
+            );
+    }
     /**
      * Post a paste : 'Content', 'Created', 'content-type'
      *
