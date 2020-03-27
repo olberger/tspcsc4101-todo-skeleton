@@ -6,26 +6,36 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TodoControllerTest extends WebTestCase
 {
+    private $client = null;
     
+    public function setUp() : void
+    {
+        $this->client = static::createClient();
+    }
     /**
      * @dataProvider urlProvider
      */
-    public function testPageIsSuccessful($url)
+    public function testPublicPageIsSuccessful($url)
     {
-        $client = self::createClient();
+        $client = $this->client;
         $client->request('GET', $url);
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
+
+    public function urlProvider()
+    {
+        yield ['/todo/'];
+        yield ['/todo/list'];
+        yield ['/todo/list-active'];
+        yield ['/todo/1'];
+    }
     public function testIndexPage()
     {
-        $client = self::createClient();
-        $crawler = $client->request('GET', '/');
-        $this->assertTrue($client->getResponse()->isSuccessful());
+       $client = $this->client;
+       $crawler = $client->request('GET', '/');
         /* is there 2 link to load css pages */
-        $this->assertGreaterThan(
-            1,
-            $crawler->filter('link')->count()
-            );
+        $this->assertGreaterThan(1, $crawler->filter('link')
+            ->count());
         /* is there 2 script to load js */
         $this->assertGreaterThan(
             1,
@@ -49,102 +59,86 @@ class TodoControllerTest extends WebTestCase
             );
         
     }
+
     public function testListContainsTable()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('table')->count()
-            );
+        $this->assertGreaterThan(0, $crawler->filter('table')
+            ->count());
     }
+
     public function testListTableContainsLink()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html a')->count()
-            );
+        $this->assertGreaterThan(0, $crawler->filter('html a')
+            ->count());
     }
+
     public function testClickOnFirstTodo()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
-        $link = $crawler
-        ->filter('a:contains("show")') // find all links with the text "show"
-        ->eq(0) // select the first link in the list
-        ->link()
-        ;
-        
+        $link = $crawler->filter('a:contains("Show")')
+            -> // find all links with the text "Show"
+        eq(0)
+            -> // select the first link in the list
+        link();
+
         // and click it
         $crawler = $client->click($link);
         $this->assertTrue($client->getResponse()->isSuccessful());
         
     }
-    
+
     public function testFirstTodoContainsBackLink()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
-        $link = $crawler
-        ->filter('a:contains("show")') // find all links with the text "show"
-        ->eq(0) // select the first link in the list
-        ->link()
-        ;
-        
+        // find all links with the text "Show"
+        // select the first link in the list
+        $link = $crawler->filter('a:contains("Show")')
+            -> eq(0)
+            -> link();
+
         // and click it
         $crawler = $client->click($link);
-        $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('a:contains("back")')->count()
-            );
-        
+        $this->assertTrue($client->getResponse()
+            ->isSuccessful());
+        $this->assertGreaterThan(0, $crawler->filter('a:contains("Back")')
+            ->count());
     }
+
     public function testListActiveContainsTable()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list-active');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html table')->count()
-            );
+        $this->assertGreaterThan(0, $crawler->filter('html table')
+            ->count());
     }
     public function testListTableActiveContainsLink()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list-active');
-        $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html a')->count()
-            );
+        $this->assertGreaterThan(0, $crawler->filter('html a')
+            ->count());
     }
+
     public function testClickOnFirstActiveTodo()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/todo/list-active');
-        $link = $crawler
-        ->filter('a:contains("show")') // find all links with the text "show"
-        ->eq(0) // select the first link in the list
-        ->link()
-        ;
-        
+        // find all links with the text "Show"
+        // select the first link in the list
+        $link = $crawler->filter('a:contains("Show")')
+            -> eq(0)
+            -> link();
+
         // and click it
         $crawler = $client->click($link);
-        $this->assertTrue($client->getResponse()->isSuccessful());
-        
+        $this->assertTrue($client->getResponse()
+            ->isSuccessful());
     }
-    public function urlProvider()
-    {
-        yield ['/todo/'];
-        yield ['/todo/list'];
-        yield ['/todo/list-active'];
-        yield ['/todo/1'];
-        // ...
-    }
+
 }

@@ -9,11 +9,11 @@
         <thead class="thead-light">
             <tr>
                 <th>Id</th>
-                <th>Todo</th>
+                <th>Title</th>
                 <th>Completed</th>
                 <th>Created</th>
                 <th>Updated</th>
-                <td> &nbsp;</td>
+                <td>Actions</td>
             </tr>
         </thead>
         <tbody>
@@ -25,7 +25,7 @@
                 <td>{{ todo.completed }}</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>
-                <td><a href="{{ path('todo_show', {'id': todo.id}) }}">show</a></td>
+                <td><a href="{{ path('todo_show', {'id': todo.id}) }}"><button class="btn btn-lg btn-primary">Show</button></a>
             </tr>
             {% endif %}
         {% else %}
