@@ -21,7 +21,6 @@ class PasteControllerTest extends WebTestCase
     {
         yield ['/paste/'];
         yield ['/paste/1'];
-        // ...
     }
     public function testIndexContainsTable()
     {
@@ -65,11 +64,11 @@ class PasteControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(
             0,
-            $crawler->filter('a:contains("edit")')->count()
+            $crawler->filter('a:contains("Edit")')->count()
             );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('a:contains("back")')->count()
+            $crawler->filter('a:contains("Back")')->count()
             );
         $this->assertGreaterThan(
             0,
@@ -110,7 +109,7 @@ class PasteControllerTest extends WebTestCase
     }
     
     /**
-     * Delete last Todo
+     * Delete last Paste
      */
     public function testDelete()
     {

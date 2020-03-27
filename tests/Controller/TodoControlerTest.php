@@ -8,14 +8,14 @@ class TodoControllerTest extends WebTestCase
 {
     private $client = null;
     
-    public function setUp()
+    public function setUp() : void
     {
         $this->client = static::createClient();
     }
     /**
      * @dataProvider urlProvider
      */
-    public function testPageIsSuccessful($url)
+    public function testPublicPageIsSuccessful($url)
     {
         $client = $this->client;
         $client->request('GET', $url);
@@ -71,8 +71,8 @@ class TodoControllerTest extends WebTestCase
     {
         $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
-        $link = $crawler->filter('a:contains("show")')
-            -> // find all links with the text "show"
+        $link = $crawler->filter('a:contains("Show")')
+            -> // find all links with the text "Show"
         eq(0)
             -> // select the first link in the list
         link();
@@ -87,9 +87,9 @@ class TodoControllerTest extends WebTestCase
     {
         $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
-        // find all links with the text "show"
+        // find all links with the text "Show"
         // select the first link in the list
-        $link = $crawler->filter('a:contains("show")')
+        $link = $crawler->filter('a:contains("Show")')
             -> eq(0)
             -> link();
 
@@ -97,7 +97,7 @@ class TodoControllerTest extends WebTestCase
         $crawler = $client->click($link);
         $this->assertTrue($client->getResponse()
             ->isSuccessful());
-        $this->assertGreaterThan(0, $crawler->filter('a:contains("back")')
+        $this->assertGreaterThan(0, $crawler->filter('a:contains("Back")')
             ->count());
     }
 
@@ -121,9 +121,9 @@ class TodoControllerTest extends WebTestCase
     {
         $client = $this->client;
         $crawler = $client->request('GET', '/todo/list-active');
-        // find all links with the text "show"
+        // find all links with the text "Show"
         // select the first link in the list
-        $link = $crawler->filter('a:contains("show")')
+        $link = $crawler->filter('a:contains("Show")')
             -> eq(0)
             -> link();
 
@@ -133,8 +133,8 @@ class TodoControllerTest extends WebTestCase
             ->isSuccessful());
     }
     /**
-     * Post a Todo : 'Title', 'Completed'
-     *
+     * Post a todo : 'title' 'completed'
+     * This test post a new todo and check that the number of lines in index is greater after the creation.
      */
     public function testNew()
     {
