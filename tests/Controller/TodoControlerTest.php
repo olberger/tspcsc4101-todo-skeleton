@@ -6,19 +6,24 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TodoControllerTest extends WebTestCase
 {
+    private $client = null;
     
+    public function setUp() : void
+    {
+        $this->client = static::createClient();
+    }
     /**
      * @dataProvider urlProvider
      */
-    public function testPageIsSuccessful($url)
+    public function testPublicPageIsSuccessful($url)
     {
-        $client = self::createClient();
+        $client = $this->client;
         $client->request('GET', $url);
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
     public function testListContainsLI()
     {
-        $client = self::createClient();
+       $client = $this->client;
         $crawler = $client->request('GET', '/todo/list');
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertGreaterThan(
@@ -26,6 +31,7 @@ class TodoControllerTest extends WebTestCase
             $crawler->filter('html li')->count()
             );
     }
+
     public function urlProvider()
     {
         yield ['/todo/'];
