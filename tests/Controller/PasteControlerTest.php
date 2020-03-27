@@ -113,7 +113,7 @@ class PasteControllerTest extends WebTestCase
                 'content' => 'Test paste',
                 'content_type' => 'text',
                 'created'=>array (
-                    'date' => array( 'year' => 2018, 'month' => 8, 'day' => 14),
+                    'date' => array( 'year' => 2020, 'month' => 4, 'day' => 14),
                     'time' => array('hour' => 14, 'minute' => 30)
                 )
             )
@@ -121,8 +121,7 @@ class PasteControllerTest extends WebTestCase
         $crawler = $client->submit($form);
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         
-        $crawler = $client->request('GET', '/paste/');
-        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+        $crawler = $client->request('GET', '/paste/')
         
         $this->assertGreaterThan($nbPastes, $crawler->filter('tr')
             ->count());
