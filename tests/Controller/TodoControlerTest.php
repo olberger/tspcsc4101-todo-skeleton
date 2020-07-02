@@ -106,8 +106,7 @@ class TodoControllerTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('html table')
             ->count());
     }
-
-    public function testListActiveContainsLink()
+    public function testListTableActiveContainsLink()
     {
         $client = $this->client;
         $crawler = $client->request('GET', '/todo/list-active');
