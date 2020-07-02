@@ -35,8 +35,7 @@
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "*",
         "symfony/phpunit-bridge": "*",
-        "symfony/profiler-pack": "*",
-        "symfony/web-server-bundle": "*"
+        "symfony/profiler-pack": "*"
     },
     "config": {
         "preferred-install": {
