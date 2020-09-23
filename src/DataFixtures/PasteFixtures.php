@@ -13,7 +13,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Paste;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class PasteFixtures extends Fixture
 {
@@ -28,7 +28,7 @@ class PasteFixtures extends Fixture
             $paste = new Paste();
             $paste->setContent($title);
             $paste->setContentType("text");
-            $paste->setCreated(new \DateTime());
+            $paste->setCreated(new DateTime());
             $manager->persist($paste);
         }
         $manager->flush();
