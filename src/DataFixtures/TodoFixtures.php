@@ -14,8 +14,8 @@ namespace App\DataFixtures;
 use App\Entity\Todo;
 use App\Entity\Paste;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
-use DateTime;
+use Doctrine\Persistence\ObjectManager;
+
 
 class TodoFixtures extends Fixture
 {

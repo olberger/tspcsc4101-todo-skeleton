@@ -13,7 +13,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Paste;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class PasteFixtures extends Fixture
 {
