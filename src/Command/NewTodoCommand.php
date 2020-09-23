@@ -9,8 +9,9 @@
 namespace App\Command;
 
 use App\Entity\Todo;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Command\Command;
-use Doctrine\Persistence\ManagerRegistry;
+//use Doctrine\Persistence\ManagerRegistry;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

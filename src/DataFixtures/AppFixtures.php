@@ -12,8 +12,8 @@
 namespace App\DataFixtures;
 
 use App\Entity\Todo;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
