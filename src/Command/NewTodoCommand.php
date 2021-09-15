@@ -10,6 +10,7 @@ namespace App\Command;
 
 use App\Entity\Todo;
 use Symfony\Component\Console\Command\Command;
+use Doctrine\Persistence\ManagerRegistry;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,6 +21,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NewTodoCommand extends Command
 {    
+    private $doctrineManager;
+    
+    public function __construct(ManagerRegistry $doctrineManager)
+    {
+        $this->doctrineManager = $doctrineManager;
+        
+        parent::__construct();
+    }
+    
     protected function configure()
     {
         $this
@@ -40,9 +50,10 @@ class NewTodoCommand extends Command
         $todo = new Todo();
         $todo->setTitle($input->getArgument('title'));
         $todo->setCompleted(false);
-        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em = $this->doctrineManager;
         $em->persist($todo);
         $em->flush();
         $output->writeln('Created: '. $todo);
+        return 0;
     }
 }

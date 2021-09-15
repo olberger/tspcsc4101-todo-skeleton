@@ -11,7 +11,7 @@ namespace App\Command;
 use App\Entity\Todo;
 use \DateTime;
 use Symfony\Component\Console\Command\Command;
-
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -22,6 +22,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class UpdateTodoCommand extends Command
 {    
+    private $doctrineManager;
+    
+    public function __construct(ManagerRegistry $doctrineManager)
+    {
+        $this->doctrineManager = $doctrineManager;
+        
+        parent::__construct();
+    }
+    
     protected function configure()
     {
         $this
@@ -43,7 +52,7 @@ class UpdateTodoCommand extends Command
     
         $id = $input->getArgument('todoId');
         
-        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em = $this->doctrineManager;
         $todo = $em->getRepository(Todo::class)->find($id);
         
         if ($todo) {
@@ -56,7 +65,8 @@ class UpdateTodoCommand extends Command
             }
         } else {
             $errOutput->writeln('<error>no todos found with id "'. $id .'"!</error>');
+            return 1;
         }
-    
+        return 0;
     }
 }

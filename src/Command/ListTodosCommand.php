@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
-
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Command ListTodo
@@ -23,6 +23,16 @@ use Symfony\Component\Console\Command\Command;
  */
 class ListTodosCommand extends Command
 {    
+    
+    private $doctrineManager;
+    
+    public function __construct(ManagerRegistry $doctrineManager)
+    {
+        $this->doctrineManager = $doctrineManager;
+        
+        parent::__construct();
+    }
+    
     protected function configure()
     {
         $this
@@ -42,7 +52,7 @@ class ListTodosCommand extends Command
         $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
         
         // entityManager
-        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em = $this->doctrineManager;
         
         // récupère une liste toutes les instances de la classe Todo 
         $todos = $em->getRepository(Todo::class)->findAll();
@@ -55,7 +65,8 @@ class ListTodosCommand extends Command
             }
         } else {
             $errOutput->writeln('<error>no todos found!</error>');
+            return 1;
         }
-        
+        return 0;
     }
 }

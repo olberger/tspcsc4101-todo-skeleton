@@ -10,6 +10,7 @@ namespace App\Command;
 
 use App\Entity\Todo;
 use Symfony\Component\Console\Command\Command;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -20,6 +21,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ShowTodoCommand extends Command
 {    
+    private $doctrineManager;
+    
+    public function __construct(ManagerRegistry $doctrineManager)
+    {
+        $this->doctrineManager = $doctrineManager;
+        
+        parent::__construct();
+    }
+    
     protected function configure()
     {
         $this
@@ -39,21 +49,18 @@ class ShowTodoCommand extends Command
     {
         $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
         
-        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em = $this->doctrineManager;
         
         $id = $input->getArgument('todoId');
         $todo = $em->getRepository(Todo::class)->find($id);
         
         if ($todo) {
             // $output->writeln($todo->__toString());
-            $output->write($todo->getId() .": ". $todo->getTitle());
-            $output->writeln(" ".$todo->getCompleted() ? '(completed)': '(not complete)');
-            $output->writeln("\t created: ".$todo->getCreated()->format('Y-m-d H:i:s'));
-            $output->writeln("\t updated: ".$todo->getUpdated()->format('Y-m-d H:i:s'));
-            
+            $output->writeln($todo);
+            return 1;
         } else {
             $errOutput->writeln('<error>no todos found with id "'. $id .'"!</error>');
         }
-        
+        return 0;
     }
 }
