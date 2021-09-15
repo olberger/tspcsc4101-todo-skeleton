@@ -10,8 +10,7 @@ namespace App\Command;
 
 use App\Entity\Todo;
 use Symfony\Component\Console\Command\Command;
-use Doctrine\Persistence\ManagerRegistry;
-
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -22,14 +21,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DelTodoCommand extends Command
 {    
-    private $doctrineManager;
+    private $entityManager;
     
-    public function __construct(ManagerRegistry $doctrineManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->doctrineManager = $doctrineManager;
+        $this->entityManager = $entityManager;
         
         parent::__construct();
     }
+    
     protected function configure()
     {
         $this
@@ -45,13 +45,14 @@ class DelTodoCommand extends Command
         ->addArgument('todoId', InputArgument::REQUIRED, 'The id of the todo.')
         ;
     }
+    
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
         
         $id = $input->getArgument('todoId');
         
-        $em = $this->doctrineManager;
+        $em = $this->entityManager;
         $todo = $em->getRepository(Todo::class)->find($id);
         
         if ($todo) {
