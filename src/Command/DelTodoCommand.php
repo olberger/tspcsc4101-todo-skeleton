@@ -9,7 +9,7 @@
 namespace App\Command;
 
 use App\Entity\Todo;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Command Todo
  */
-class DelTodoCommand extends ContainerAwareCommand
+class DelTodoCommand extends Command
 {    
     protected function configure()
     {

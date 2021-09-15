@@ -12,7 +12,7 @@ use App\Entity\Todo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 
 
 /**
@@ -21,7 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
  * cf. https://symfony.com/doc/current/console.html
  *
  */
-class ListactiveTodosCommand extends ContainerAwareCommand
+class ListactiveTodosCommand extends Command
 {
     protected function configure()
     {
