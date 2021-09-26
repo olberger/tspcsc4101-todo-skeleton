@@ -21,6 +21,16 @@ class TodoControllerTest extends WebTestCase
         $client->request('GET', $url);
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
+    public function testListContainsLI()
+    {
+       $client = $this->client;
+        $crawler = $client->request('GET', '/todo/list');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html li')->count()
+            );
+    }
 
     public function urlProvider()
     {

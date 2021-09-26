@@ -12,10 +12,7 @@ use App\Entity\Todo;
 
 use \DateTime;
 use Symfony\Component\Console\Command\Command;
-use Doctrine\Persistence\ManagerRegistry;
-
-use Doctrine\ORM\EntityManager;
-
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -27,13 +24,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class UpdateTodoCommand extends Command
 {    
-    private $doctrineManager;
-    private $todoRepository;
+    private $entityManager;
     
-    public function __construct(ManagerRegistry $doctrineManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->doctrineManager = $doctrineManager;
-        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
+        $this->entityManager = $entityManager;
         
         parent::__construct();
     }
@@ -59,7 +54,8 @@ class UpdateTodoCommand extends Command
     
         $id = $input->getArgument('todoId');
         
-        $todo = $this->todoRepository->find($id);
+        $em = $this->entityManager;
+        $todo = $em->getRepository(Todo::class)->find($id);
         
         if ($todo) {
             if(! $todo->getCompleted()) {
