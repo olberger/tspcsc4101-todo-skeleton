@@ -124,13 +124,13 @@
 	</div>
 	<!-- /.container -->
 	{% endblock %} {# body #}
+  {% block javascripts %}
+    <!-- Bootstrap core JavaScript -->
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  {% endblock %} {# javascripts #}
+  {% block custompage_script %}
+  {% endblock %}
 </body>
-{% block javascripts %}
-  <!-- Bootstrap core JavaScript -->
-  <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-  <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-{% endblock %} {# javascripts #}
-{% block custompage_script %}
-{% endblock %}
 
 </html>
