@@ -23,7 +23,7 @@ class AppFixtures extends Fixture
         $this->loadTodos($manager);
         $this->loadPastes($manager);
     }
-    
+
     private function loadTodos(ObjectManager $manager)
     {
         foreach ($this->getTodosData() as [$title, $completed]) {
@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
     }
-    
+
     private function getTodosData()
     {
         // todo = [title, completed];
@@ -42,7 +42,7 @@ class AppFixtures extends Fixture
         yield ['devenir un pro du Web', false];
         yield ['monter une startup',  false];
         yield ['devenir maître du monde', false];
-        
+
     }
     private function loadPastes(ObjectManager $manager)
     {
@@ -50,17 +50,17 @@ class AppFixtures extends Fixture
             $paste = new Paste();
             $paste->setContent($content);
             $paste->setContentType($type);
-            $paste->setCreated(new DateTime());
+            $paste->setCreated(new \DateTime());
             $manager->persist($paste);
         }
         $manager->flush();
     }
-    
+
     private function getPastesData()
     {
         yield ['https://symfony.com/doc/current/setup.html', "text/html"];
-        
+
     }
-    
-    
+
+
 }
