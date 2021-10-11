@@ -1,5 +1,4 @@
 bootstrap_menu:
-  version: 4
   menus:
     main:
       items:
