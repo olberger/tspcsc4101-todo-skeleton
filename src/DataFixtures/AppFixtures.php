@@ -12,8 +12,9 @@
 namespace App\DataFixtures;
 
 use App\Entity\Todo;
+use App\Entity\Paste;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use App\DataFixtures\ProjectFixtures;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
@@ -22,8 +23,9 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $this->loadTodos($manager);
+        $this->loadPastes($manager);
     }
-    
+
     private function loadTodos(ObjectManager $manager)
     {
         foreach ($this->getTodosData() as [$title, $completed, $project]) {
@@ -38,7 +40,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
         }
         $manager->flush();
     }
-    
+
     private function getTodosData()
     {
         // todo = [title, completed];
@@ -48,11 +50,29 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
         yield ['devenir maître du monde', false, null];
         
     }
-    
+    private function loadPastes(ObjectManager $manager)
+    {
+        foreach ($this->getPastesData() as [$content, $type]) {
+            $paste = new Paste();
+            $paste->setContent($content);
+            $paste->setContentType($type);
+            $paste->setCreated(new \DateTime());
+            $manager->persist($paste);
+        }
+        $manager->flush();
+    }
+
+    private function getPastesData()
+    {
+        yield ['https://symfony.com/doc/current/setup.html', "text/html"];
+
+    }
+
     public function getDependencies()
     {
         return array(
             ProjectFixtures::class,
         );
     }
+
 }

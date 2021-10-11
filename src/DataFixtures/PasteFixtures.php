@@ -13,7 +13,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Paste;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class PasteFixtures extends Fixture
 {
@@ -21,7 +21,7 @@ class PasteFixtures extends Fixture
     {
         $this->loadPastes($manager);
     }
-    
+
     private function loadPastes(ObjectManager $manager)
     {
         foreach ($this->getPastesData() as [$title]) {
@@ -33,15 +33,15 @@ class PasteFixtures extends Fixture
         }
         $manager->flush();
     }
-    
+
     private function getPastesData()
     {
         yield ['composer require '];
         yield ['bin/console debug:router'];
         yield ['bin/console '];
         yield ['bin/phpunit'];
-        
+
     }
-    
-    
+
+
 }

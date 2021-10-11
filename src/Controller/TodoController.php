@@ -2,7 +2,7 @@
 /**
  * Gestion de la page d'accueil de l'application
  *
- * @copyright  2017 Telecom SudParis
+ * @copyright  2017-2021 Telecom SudParis
  * @license    "MIT/X" License - cf. LICENSE file at project root
  */
 
@@ -41,6 +41,7 @@ class TodoController extends AbstractController
             'todos' => $todos,
         ));
     }
+    
     /**
      * Lists all active todo entities.
      *
@@ -55,10 +56,12 @@ class TodoController extends AbstractController
         // $todos = $em->getRepository(Todo::class)->findByCompleted(false);
         $todos = $em->getRepository(Todo::class)->findAll(false);
         
+
         return $this->render('todo/active-index.html.twig', array(
             'todos' => $todos,
         ));
     }
+    
     /**
      * Finds and displays a todo entity.
      *
@@ -66,6 +69,7 @@ class TodoController extends AbstractController
      */
     public function showAction(Todo $todo): Response
     {
+
         return $this->render('todo/show.html.twig', array(
             'todo' => $todo,
         ));
