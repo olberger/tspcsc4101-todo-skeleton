@@ -6,13 +6,18 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PasteControllerTest extends WebTestCase
 {
+    private $client = null;
     
+    public function setUp() : void
+    {
+        $this->client = static::createClient();
+    }
     /**
      * @dataProvider urlProvider
      */
     public function testPageIsSuccessful($url)
     {
-        $client = self::createClient();
+        $client = $this->client;
         $client->request('GET', $url);
         $this->assertTrue($client->getResponse()->isSuccessful());
     }
@@ -21,7 +26,60 @@ class PasteControllerTest extends WebTestCase
     {
         yield ['/paste/'];
         yield ['/paste/1'];
-        // ...
+    }
+    public function testIndexContainsTable()
+    {
+        $client = $this->client;
+        $crawler = $client->request('GET', '/paste/');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('table')->count()
+            );
+    }
+    public function testIndexContainsNew()
+    {
+        $client = $this->client;
+
+        $crawler = $client->request('GET', '/paste/');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('a[href="/paste/new"]')->count()
+            );
+    }
+    public function testIndexContainsEditLink()
+    {
+        $client = $this->client;
+        $crawler = $client->request('GET', '/paste/');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('a:contains("Edit")')->count()
+            );
+    }
+    public function testFirstPasteContainsLinks()
+    {
+        $client = $this->client;
+        $crawler = $client->request('GET', '/paste/');
+        $link = $crawler
+        ->filter('a:contains("Show")') // find all links with the text "show"
+        ->eq(0) // select the first link in the list
+        ->link()
+        ;
+        
+        // and click it
+        $crawler = $client->click($link);
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('a:contains("Edit")')->count()
+            );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('a:contains("Back")')->count()
+            );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('form input[value="DELETE"]')->count()
+            );
     }
     /**
      * Post a paste : 'Content', 'Created', 'content-type'
@@ -29,11 +87,8 @@ class PasteControllerTest extends WebTestCase
      */
     public function testNew()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/paste/');
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
-        
         $nbPastes = $crawler->filter('tr')->count();
         $crawler = $client->request('GET', '/paste/new');
         $this->assertTrue($client->getResponse()
@@ -46,7 +101,7 @@ class PasteControllerTest extends WebTestCase
                 'content' => 'Test paste',
                 'content_type' => 'text',
                 'created'=>array (
-                    'date' => array( 'year' => 2018, 'month' => 8, 'day' => 14),
+                    'date' => array( 'year' => 2020, 'month' => 4, 'day' => 14),
                     'time' => array('hour' => 14, 'minute' => 30)
                 )
             )
@@ -55,18 +110,16 @@ class PasteControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()
             ->isRedirect());
         $crawler = $client->request('GET', '/paste/');
-        $this->assertTrue($client->getResponse()
-            ->isSuccessful());
         $this->assertGreaterThan($nbPastes, $crawler->filter('tr')
             ->count());
     }
     
     /**
-     * Delete last Todo
+     * Delete last Paste
      */
     public function testDelete()
     {
-        $client = self::createClient();
+        $client = $this->client;
         $crawler = $client->request('GET', '/paste/');
         $this->assertTrue($client->getResponse()
             ->isSuccessful());

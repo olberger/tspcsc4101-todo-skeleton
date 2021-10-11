@@ -9,8 +9,8 @@
 namespace App\Command;
 
 use App\Entity\Todo;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Command\Command;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,18 +20,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Command Todo
  */
 class NewTodoCommand extends Command
-{
-    /**
-     * @var EntityManager
-     */
-    private $em;
+{    
+    private $entityManager;
     
-    public function __construct(ContainerInterface $container)
+    public function __construct(EntityManagerInterface $entityManager)
     {
+        $this->entityManager = $entityManager;
+        
         parent::__construct();
-        $this->em = $container->get('doctrine')->getManager();
     }
-    
+
     protected function configure()
     {
         $this
@@ -52,8 +50,11 @@ class NewTodoCommand extends Command
         $todo = new Todo();
         $todo->setTitle($input->getArgument('title'));
         $todo->setCompleted(false);
-        $this->em->persist($todo);
-        $this->em->flush();
+        $em = $this->entityManager;
+        $em->persist($todo);
+        $em->flush();
+
         $output->writeln('Created: '. $todo);
+        return 0;
     }
 }
