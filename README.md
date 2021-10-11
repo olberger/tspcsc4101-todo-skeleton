@@ -13,7 +13,8 @@ To test, use :
 Changelog :
  - v6.x : ApiPlatform
  - v5.x : Add Pastes entity with its CRUD controller
- - v4.x : Add camurphy/bootstrap-menu-bundle and boostrap
+ - v4.x : Add camurphy/bootstrap-menu-bundle and boostrap (via
+          StartBootstrap "bare" distribution)
  - v3.x : Add templating with Twig
  - v2.x : Add basic Web interface
  - v1.x : initial version with CLI commands
