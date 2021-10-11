@@ -38,4 +38,3 @@ bootstrap_menu:
               label: 'Logout'
               route: 'app_logout'
               roles: [ 'ROLE_USER' ]
-          
