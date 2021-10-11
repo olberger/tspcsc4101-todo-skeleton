@@ -9,8 +9,9 @@
 namespace App\Command;
 
 use App\Entity\Todo;
-use Doctrine\ORM\EntityManager;
+use \DateTime;
 use Symfony\Component\Console\Command\Command;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -21,19 +22,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Command Todo
  */
 class UpdateTodoCommand extends Command
-{
-    private $todoRepository;
+{    
+    private $entityManager;
     
-    /**
-     * @var EntityManager
-     */
-    private $em;
-    
-    public function __construct(ContainerInterface $container)
+    public function __construct(EntityManagerInterface $entityManager)
     {
+        $this->entityManager = $entityManager;
+        
         parent::__construct();
-        $this->em = $container->get('doctrine')->getManager();
-        $this->todoRepository = $container->get('doctrine')->getManager()->getRepository(Todo::class);
     }
     
     protected function configure()
@@ -57,7 +53,8 @@ class UpdateTodoCommand extends Command
     
         $id = $input->getArgument('todoId');
         
-        $todo = $this->todoRepository->find($id);
+        $em = $this->entityManager;
+        $todo = $em->getRepository(Todo::class)->find($id);
         
         if ($todo) {
             if(! $todo->getCompleted()) {
@@ -69,7 +66,8 @@ class UpdateTodoCommand extends Command
             }
         } else {
             $errOutput->writeln('<error>no todos found with id "'. $id .'"!</error>');
+            return 1;
         }
-    
+        return 0;
     }
 }
