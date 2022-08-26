@@ -55,6 +55,7 @@ class Todo {
     
     public function __construct() 
     {
+        $this->completed = false;
         $this->created = new \DateTime();
         $this->updated = new \DateTime();
     }
