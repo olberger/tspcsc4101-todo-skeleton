@@ -11,7 +11,7 @@ To test, use :
  $ composer create-project oberger/tspcsc4101-todo-skeleton todo-app "v2.*"
 
 Changelog :
- - v2.x : Add basic Web interface
+ - v2.x : Add basic Web interface and EasyAdmin dashboard
  - v1.x : initial version with CLI commands
  
 -- Olivier Berger
