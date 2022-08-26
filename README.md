@@ -13,7 +13,7 @@ To test, use :
 
 Changelog :
  - v3.x : Add templating with Twig
- - v2.x : Add basic Web interface
+ - v2.x : Add basic Web interface and EasyAdmin dashboard
  - v1.x : initial version with CLI commands
  
 -- Olivier Berger
