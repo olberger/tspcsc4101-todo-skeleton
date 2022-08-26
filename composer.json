@@ -3,7 +3,7 @@
     "type": "project",
     "license": "MIT",
     "description": "A minimal ToDo app Symfony project for CSC4101 teaching at TSP",
-    "version" : "2.11",
+    "version" : "2.12",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
