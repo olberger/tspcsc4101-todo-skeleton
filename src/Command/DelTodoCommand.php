@@ -9,23 +9,38 @@
 namespace App\Command;
 
 use App\Entity\Todo;
+use App\Repository\TodoRepository;
+
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command Todo
  */
+#[AsCommand(
+    name: 'app:del-todo',
+    description: 'Delete one todo',
+    )]
 class DelTodoCommand extends Command
 {    
-    private $entityManager;
+    /**
+     *  @var TodoRepository data access repository
+     */
+    private $todoRepository;
     
-    public function __construct(EntityManagerInterface $entityManager)
+    /**
+     * Plugs the database to the command
+     *
+     * @param ManagerRegistry $doctrineManager
+     */
+    public function __construct(ManagerRegistry $doctrineManager)
     {
-        $this->entityManager = $entityManager;
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
         
         parent::__construct();
     }
@@ -33,12 +48,6 @@ class DelTodoCommand extends Command
     protected function configure()
     {
         $this
-        // the name of the command (the part after "bin/console")
-        ->setName('app:del-todo')
-        
-        // the short description shown while running "php bin/console list"
-        ->setDescription('Delete one todo.')
-        
         // the full command description shown when running the command with
         // the "--help" option
         ->setHelp('This command allows you to delete one todo')
@@ -48,20 +57,20 @@ class DelTodoCommand extends Command
     
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
+        $io = new SymfonyStyle($input, $output);
         
         $id = $input->getArgument('todoId');
         
-        $em = $this->entityManager;
-        $todo = $em->getRepository(Todo::class)->find($id);
+        $todo = $this->todoRepository->find($id);
         
         if ($todo) {
-            $em->remove($todo);
-            $em->flush();
+            $this->todoRepository->remove($todo, true);
+            $io->text('Deletion completed.');
+            
+            return Command::SUCCESS;
         } else {
-            $errOutput->writeln('<error>no todos found with id "'. $id .'"!</error>');
-            return 1;
+            $io->error('no todos found with id "'. $id .'"!');
+            return Command::FAILURE;
         }
-        return 0;
     }
 }

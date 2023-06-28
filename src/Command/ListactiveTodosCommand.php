@@ -9,8 +9,11 @@
 namespace App\Command;
 
 use App\Entity\Todo;
+use App\Repository\TodoRepository;
+
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,13 +24,25 @@ use Doctrine\Persistence\ManagerRegistry;
  * cf. https://symfony.com/doc/current/console.html
  *
  */
-class ListactiveTodosCommand extends Command
+#[AsCommand(
+    name: 'app:list-active-todos',
+    description: 'List the active todos',
+    )]
+ class ListactiveTodosCommand extends Command
 {
-    private $doctrineManager;
+    /**
+     *  @var TodoRepository data access repository
+     */
+    private $todoRepository;
     
+    /**
+     * Plugs the database to the command
+     *
+     * @param ManagerRegistry $doctrineManager
+     */
     public function __construct(ManagerRegistry $doctrineManager)
     {
-        $this->doctrineManager = $doctrineManager;
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
         
         parent::__construct();
     }
@@ -35,12 +50,6 @@ class ListactiveTodosCommand extends Command
     protected function configure()
     {
         $this
-        // the name of the command (the part after "bin/console")
-        ->setName('app:list-active-todos')
-        
-        // the short description shown while running "php bin/console list"
-        ->setDescription('List the active todos.')
-        
         // the full command description shown when running the command with
         // the "--help" option
         ->setHelp("This command allows you to list the todos which are active, i.e. not yet completed")
@@ -49,46 +58,38 @@ class ListactiveTodosCommand extends Command
     
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
-        
-        // entityManager
-        $em = $this->doctrineManager;
+        $io = new SymfonyStyle($input, $output);
         
         // récupère une liste toutes les instances de la classe Todo
-        $todos = $em->getRepository(Todo::class)->findAll();
+        $todos = $this->todoRepository->findAll();
         
         // filtrer les tâches pas encore terminées
         $actives=array();
         foreach($todos as $todo) {
-            if(! $todo->getCompleted()) {
+            if(! $todo->isCompleted()) {
                 $actives[] = $todo;
             }
         }
         
         if(! empty($actives)) {
-            $output->writeln('list of active todos:');
-            foreach($actives as $todo) {
-                //$output->writeln($todo->__toString());
-                $output->writeln($todo);
-            }
+            $io->title('list of active todos:');
+            $io->listing($actives);
         } else {
-            $errOutput->writeln('<error>no active todos found!</error>');
-            return 1;
+            $io->error('no todos found!');
+            return Command::FAILURE;
         }
-        return 0;
+        return Command::SUCCESS;
 // Alternative basée sur Doctrine
 //         // récupère une liste toutes les instances de la classe Todo dont completed vaut false
-//         $todos = $em->getRepository(Todo::class)->findByCompleted(false);
-//
+//         $todos = $this->todoRepository->findByCompleted(false);
+
 //         if(! empty($todos)) {
-//             $output->writeln('list of active todos:');
-//             foreach($todos as $todo) {
-//                 //$output->writeln($todo->__toString());
-//                 $output->writeln($todo);
-//             }
+//             $io->title('list of active todos:');
+//             $io->listing($todos);
+//             return Command::SUCCESS;
 //         } else {
-//             $errOutput->writeln('<error>no active todos found!</error>');
-//        return 1;  
+//             $io->error('no active todos found!');
+//             return Command::FAILURE;  
 //         }
     }
 }

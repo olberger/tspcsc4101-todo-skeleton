@@ -30,7 +30,6 @@ use Doctrine\Persistence\ManagerRegistry;
     )]
 class ListTodosCommand extends Command
 {    
-    
     /**
      *  @var TodoRepository data access repository
      */
