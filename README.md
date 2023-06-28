@@ -11,7 +11,7 @@ To test, use :
  $ composer create-project oberger/tspcsc4101-todo-skeleton todo-app "v2.*"
 
 Changelog :
- - v3.x : Update from Symfony 5.4 to Symfony 6.3
+ - v2.13 : Update from Symfony 5.4 to Symfony 6.3
  - v2.x : Add basic Web interface and EasyAdmin dashboard
  - v1.x : initial version with CLI commands
  
@@ -23,5 +23,8 @@ Recreating it :
  - symfony composer require --dev doctrine/doctrine-fixtures-bundle
  - symfony console make:entity # for Todo
  - symfony console make:command # for app:list-todos, app:show-todo
- 
+
+Testing development branches:
+ $ symfony composer create-project oberger/tspcsc4101-todo-skeleton todo-app "2.x-dev"
+
 -- Olivier Berger
