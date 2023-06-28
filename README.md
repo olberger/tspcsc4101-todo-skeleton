@@ -11,8 +11,7 @@ To test, use :
  $ composer create-project oberger/tspcsc4101-todo-skeleton todo-app
 
 Changelog :
- - v3.x : Update from Symfony 5.4 to Symfony 6.3
- - v2.x : Add basic Web interface and EasyAdmin dashboard
+ - v1.7 : Update from Symfony 5.4 to Symfony 6.3
  - v1.x : initial version with CLI commands
  
 Recreating it :
