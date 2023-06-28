@@ -1,57 +1,52 @@
 <?php
 namespace App\Entity;
 
+//use Doctrine\ORM\Mapping as ORM;
+//use DateTime;
+use App\Repository\TodoRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use DateTime;
 
 /**
  * Tâche
- *
- * @ORM\Table(name="todos")
- * @ORM\Entity()
- *
  */
+#[ORM\Entity(repositoryClass: TodoRepository::class)]
 class Todo {
     /**
      * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(name="tid", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
     
     /**
      * @var string Description de la tâche
      *
      * La description plutôt complète de la tâche
-     *
-     * @ORM\Column(name="title", type="text", nullable=True)
      */
-    private $title = "";
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $title = "";
     
     /**
      * @var bool Is the task completed/finished.
      * 
      *  If a todo task is completed, true. If it's still active, false
-     *    
-     * @ORM\Column(type="boolean")
      */
-    private $completed;
-
+    #[ORM\Column]
+    private ?bool $completed = null;
+    
     /**
      * @var \Datetime Date of creation
-     *
-     * @ORM\Column(name="created", type="datetime")
      */
-    private $created;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $created = null;
     
     /**
      * @var \Datetime Date of last modification
-     *
-     * @ORM\Column(name="updated", type="datetime")
      */
-    private $updated;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updated = null;
     
     public function __construct() 
     {
@@ -67,14 +62,11 @@ class Todo {
     {
         $s = '';
         $s .= $this->getId() .' '. $this->getTitle() .' ';
-        $s .= $this->getCompleted() ? '(completed)': '(not complete)';
+        $s .= $this->isCompleted() ? '(completed)': '(not complete)';
         return $s;
     }
     
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -84,63 +76,47 @@ class Todo {
         return $this->title;
     }
     
-    public function setTitle(string $title): self
+    public function setTitle(?string $title): static
     {
         $this->title = $title;
         
         return $this;
     }
     
-    public function getCompleted(): ?bool
+    public function isCompleted(): ?bool
     {
         return $this->completed;
     }
     
-    public function setCompleted(bool $completed): self
+    public function setCompleted(bool $completed): static
     {
         $this->completed = $completed;
         
         return $this;
     }
-
-    /**
-     * @return \Datetime
-     */
-    public function getCreated()
+    
+    public function getCreated(): ?\DateTimeInterface
     {
         return $this->created;
     }
-
-    /**
-     * @return \Datetime
-     */
-    public function getUpdated()
+    
+    public function setCreated(?\DateTimeInterface $created): static
+    {
+        $this->created = $created;
+        
+        return $this;
+    }
+    
+    public function getUpdated(): ?\DateTimeInterface
     {
         return $this->updated;
     }
-
-    /**
-     * @param number $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @param \Datetime $created
-     */
-    public function setCreated(Datetime $created)
-    {
-        $this->created = $created;
-    }
-
-    /**
-     * @param \Datetime $updated
-     */
-    public function setUpdated(Datetime $updated)
+    
+    public function setUpdated(?\DateTimeInterface $updated): static
     {
         $this->updated = $updated;
+        
+        return $this;
     }
 
 }
