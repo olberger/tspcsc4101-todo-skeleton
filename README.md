@@ -25,5 +25,8 @@ Recreating it :
  - symfony composer require --dev doctrine/doctrine-fixtures-bundle
  - symfony console make:entity # for Todo
  - symfony console make:command # for app:list-todos, app:show-todo
- 
+
+Testing development branches:
+ $ symfony composer create-project oberger/tspcsc4101-todo-skeleton todo-app "2.x-dev"
+
 -- Olivier Berger
