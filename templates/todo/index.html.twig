@@ -10,7 +10,6 @@
             <tr>
                 <th>Id</th>
                 <th>Title</th>
-                <th>Completed</th>
                 <th>Created</th>
                 <th>Updated</th>
                 <th>Actions</th>
@@ -27,9 +26,8 @@
             {{ todo.title }}
             {% if todo.completed %}
             </del>
-            {% endif %}   
-            </td> 
-             <td>{{ todo.completed ? 'Yes' : 'No' }}</td>
+            {% endif %}
+		</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>
 
@@ -41,7 +39,7 @@
         </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

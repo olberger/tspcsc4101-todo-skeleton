@@ -10,7 +10,6 @@
             <tr>
                 <th>Id</th>
                 <th>Title</th>
-                <th>Completed</th>
                 <th>Created</th>
                 <th>Updated</th>
                 <td>Actions</td>
@@ -22,7 +21,6 @@
             <tr>
                 <td>{{ todo.id }}</td>
                 <td>{{ todo.title }}</td>
-                <td>{{ todo.completed }}</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
