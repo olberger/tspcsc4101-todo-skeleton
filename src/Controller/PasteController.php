@@ -10,14 +10,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/paste")
- */
+#[Route('/paste')]
 class PasteController extends AbstractController
 {
-    /**
-     * @Route("/", name="paste_index", methods={"GET"})
-     */
+    #[Route('/', name: 'paste_index', methods: ['GET'])]
     public function index(PasteRepository $pasteRepository): Response
     {
         return $this->render('paste/index.html.twig', [
@@ -25,35 +21,29 @@ class PasteController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/new", name="paste_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
+    #[Route('/new', name: 'paste_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, PasteRepository $pasteRepository): Response
     {
         $paste = new Paste();
         $form = $this->createForm(PasteType::class, $paste);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($paste);
-            $entityManager->flush();
+            $pasteRepository->save($paste, true);
             
             // Make sure message will be displayed after redirect
-            $this->get('session')->getFlashBag()->add('message', 'paste bien ajouté');
-            
-            return $this->redirectToRoute('paste_index');
+            $this->addFlash('message', 'paste bien ajouté');
+
+            return $this->redirectToRoute('paste_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('paste/new.html.twig', [
+        return $this->renderForm('paste/new.html.twig', [
             'paste' => $paste,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="paste_show", methods={"GET"})
-     */
+    #[Route('/{id}', name: 'paste_show', methods: ['GET'])]
     public function show(Paste $paste): Response
     {
         return $this->render('paste/show.html.twig', [
@@ -61,43 +51,37 @@ class PasteController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}/edit", name="paste_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, Paste $paste): Response
+    #[Route('/{id}/edit', name: 'paste_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Paste $paste, PasteRepository $pasteRepository): Response
     {
         $form = $this->createForm(PasteType::class, $paste);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $pasteRepository->save($paste, true);
             
             // Make sure message will be displayed after redirect
-            $this->get('session')->getFlashBag()->add('message', 'paste bien modifié');
+            $this->addFlash('message', 'paste bien modifié');
             
-            return $this->redirectToRoute('paste_index');
+            return $this->redirectToRoute('paste_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('paste/edit.html.twig', [
+        return $this->renderForm('paste/edit.html.twig', [
             'paste' => $paste,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="paste_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Paste $paste): Response
+    #[Route('/{id}', name: 'paste_delete', methods: ['POST'])]
+    public function delete(Request $request, Paste $paste, PasteRepository $pasteRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$paste->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($paste);
-            $entityManager->flush();
+            $pasteRepository->remove($paste, true);
             
             // Make sure message will be displayed after redirect
-            $this->get('session')->getFlashBag()->add('message', 'paste supprimé');
+            $this->addFlash('message', 'paste supprimé');
         }
 
-        return $this->redirectToRoute('paste_index');
+        return $this->redirectToRoute('paste_index', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -1,8 +1,8 @@
 <?php
 /**
- * Gestion de la page d'accueil de l'application
+ * Gestion des CRUD des tâches
  *
- * @copyright  2017-2022 Telecom SudParis
+ * @copyright  2017-2023 Telecom SudParis
  * @license    "MIT/X" License - cf. LICENSE file at project root
  */
 
@@ -62,28 +62,25 @@ class TodoController extends AbstractController
     #[Route('/{id}', name: 'todo_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function showAction(Todo $todo): Response
     {
-
         return $this->render('todo/show.html.twig', array(
             'todo' => $todo,
         ));
     }
     
-    /**
-     * @Route("/new", name="todo_new", methods="GET|POST")
-     */
-    public function new(Request $request): Response
+    #[Route('/new', name: 'todo_new', methods: ['GET', 'POST'])]
+    public function new(ManagerRegistry $doctrine, Request $request): Response
     {
         $todo = new Todo();
         $form = $this->createForm(TodoType::class, $todo);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $todo->setCreated(new \DateTime());
-            $em = $this->getDoctrine()->getManager();
+            $em = $doctrine->getManager();
             $em->persist($todo);
             $em->flush();
             
             // Make sure message will be displayed after redirect
-            $this->get('session')->getFlashBag()->add('message', 'tâche bien ajoutée');
+            $this->addFlash('message', 'tâche bien ajoutée');
             
             return $this->redirectToRoute('todo_index');
         }
@@ -94,11 +91,8 @@ class TodoController extends AbstractController
         ]);
     }
     
-    
-    /**
-     * @Route("/{id}/edit", name="todo_edit", methods="GET|POST")
-     */
-    public function edit(Request $request, Todo $todo): Response
+    #[Route('/{id}/edit', name: 'todo_edit', methods: ['GET', 'POST'])]
+    public function edit(ManagerRegistry $doctrine, Request $request, Todo $todo): Response
     {
         $form = $this->createForm(TodoType::class, $todo);
         $form->handleRequest($request);
@@ -107,9 +101,9 @@ class TodoController extends AbstractController
             
             $todo->setUpdated(new \DateTime());
             
-            $this->getDoctrine()->getManager()->flush();
+            $doctrine->getManager()->flush();
             
-            $this->get('session')->getFlashBag()->add('message', 'tâche mise à jour');
+            $this->addFlash('message', 'tâche mise à jour');
             
             return $this->redirectToRoute('todo_show', ['id' => $todo->getId()]);
         }
@@ -120,19 +114,16 @@ class TodoController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/{id}", name="todo_delete", methods="DELETE")
-     */
-    public function delete(Request $request, Todo $todo): Response
+    #[Route('/{id}', name: 'todo_delete', methods: ['POST'])]
+    public function delete(ManagerRegistry $doctrine, Request $request, Todo $todo): Response
     {
         if ($this->isCsrfTokenValid('delete'.$todo->getId(), $request->request->get('_token'))) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $doctrine->getManager();
             $em->remove($todo);
             $em->flush();
             
             // Make sure message will be displayed after redirect
-            $this->get('session')->getFlashBag()->add('message', 'tâche supprimée');
-            
+            $this->addFlash('message', 'tâche supprimée');
         }
         
         return $this->redirectToRoute('todo_index');
