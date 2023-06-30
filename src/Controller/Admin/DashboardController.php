@@ -12,9 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractDashboardController
 {
-    /**
-     * @Route("/admin", name="admin")
-     */
+    #[Route('/admin')]
     public function index(): Response
     {
         // redirect to some CRUD controller
