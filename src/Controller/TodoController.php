@@ -72,7 +72,7 @@ class TodoController extends AbstractController
     }
     
     #[Route('/new', name: 'todo_new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_USER')]
     public function new(ManagerRegistry $doctrine, Request $request): Response
     {
         $todo = new Todo();
@@ -97,7 +97,7 @@ class TodoController extends AbstractController
     }
     
     #[Route('/{id}/edit', name: 'todo_edit', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_USER')]
     public function edit(ManagerRegistry $doctrine, Request $request, Todo $todo): Response
     {
         $form = $this->createForm(TodoType::class, $todo);
@@ -121,7 +121,7 @@ class TodoController extends AbstractController
     }
     
     #[Route('/{id}', name: 'todo_delete', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_USER')]
     public function delete(ManagerRegistry $doctrine, Request $request, Todo $todo): Response
     {
         if ($this->isCsrfTokenValid('delete'.$todo->getId(), $request->request->get('_token'))) {

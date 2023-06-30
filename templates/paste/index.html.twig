@@ -24,7 +24,9 @@
                 <td>{{ paste.contentType }}</td>
                 <td>
                     <a href="{{ path('paste_show', {'id': paste.id}) }}"><button class="btn btn-lg btn-primary">Show</button></a>
+                    {% if is_granted('ROLE_USER') %}
                     <a href="{{ path('paste_edit', {'id': paste.id}) }}"><button class="btn btn-lg btn-warning">Edit</button></a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -34,6 +36,8 @@
         {% endfor %}
         </tbody>
     </table>
+   {% if is_granted('ROLE_USER') %}
     <a href="{{ path('paste_new') }}"><button class="btn btn-lg btn-primary">Create new</button></a>
+   {% endif %}
     
 {% endblock %}

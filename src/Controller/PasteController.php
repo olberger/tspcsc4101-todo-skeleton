@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/paste')]
 class PasteController extends AbstractController
@@ -22,6 +23,7 @@ class PasteController extends AbstractController
     }
 
     #[Route('/new', name: 'paste_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function new(Request $request, PasteRepository $pasteRepository): Response
     {
         $paste = new Paste();
@@ -52,6 +54,7 @@ class PasteController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'paste_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function edit(Request $request, Paste $paste, PasteRepository $pasteRepository): Response
     {
         $form = $this->createForm(PasteType::class, $paste);
@@ -73,6 +76,7 @@ class PasteController extends AbstractController
     }
 
     #[Route('/{id}', name: 'paste_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
     public function delete(Request $request, Paste $paste, PasteRepository $pasteRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$paste->getId(), $request->request->get('_token'))) {
