@@ -10,7 +10,8 @@ framework:
     session:
         handler_id: null
         # make EasyAdmin happy, otherwise CSRF fails for weird reason
-        cookie_secure: false
+        #cookie_secure: false
+        cookie_secure: auto
         cookie_samesite: lax
         storage_factory_id: session.storage.factory.native
 
