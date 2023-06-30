@@ -16,40 +16,20 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Controleur Todo
- * @Route("/todo")
  */
+#[Route('/todo')]
 class TodoController extends AbstractController
 {    
     /**
      * Lists all todo entities.
-     * @Route("/", name = "todo_home", methods="GET")
-     * @Route("/list", name = "todo_list", methods="GET")
-     * @Route("/index", name="todo_index", methods="GET")
      */
+    #[Route('/', name: 'todo_home', methods: ['GET'])]
+    #[Route('/list', name: 'todo_list', methods: ['GET'])]
+    #[Route('/index', name: 'todo_index', methods: ['GET'])]
     public function listAction(ManagerRegistry $doctrine)
     {
-        $htmlpage = '<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>todos list!</title>
-    </head>
-    <body>
-        <h1>todos list</h1>
-        <p>Here are all your todos:</p>
-        <ul>';
-        
         $entityManager= $doctrine->getManager();
         $todos = $entityManager->getRepository(Todo::class)->findAll();
-        foreach($todos as $todo) {
-           $htmlpage .= '<li>
-            <a href="/todo/'.$todo->getid().'">'.$todo->getTitle().'</a></li>';
-         }
-        $htmlpage .= '</ul>';
-
-        $htmlpage .= '</body></html>';
-        
-        $todos = $em->getRepository(Todo::class)->findAll();
         
         dump($todos);
         
@@ -62,12 +42,11 @@ class TodoController extends AbstractController
      * Lists all active todo entities.
      *
      * The todo entities which aren't yet completed
-     *
-     * @Route("/list-active", name = "todo_active_list", methods="GET")
      */
-    public function activelistAction()
+    #[Route('/list-active', name: 'todo_active_list', methods: ['GET'])]
+    public function activelistAction(ManagerRegistry $doctrine)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $doctrine->getManager();
         
         $todos = $em->getRepository(Todo::class)->findByCompleted(false);
         
@@ -78,9 +57,8 @@ class TodoController extends AbstractController
     
     /**
      * Finds and displays a todo entity.
-     *
-     * @Route("/{id}", name="todo_show", requirements={ "id": "\d+"}, methods="GET")
      */
+    #[Route('/{id}', name: 'todo_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function showAction(Todo $todo): Response
     {
 

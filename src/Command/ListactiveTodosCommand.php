@@ -59,11 +59,7 @@ use Doctrine\Persistence\ManagerRegistry;
     
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-<<<<<<< variant A
-        $errOutput = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
->>>>>>> variant B
         $io = new SymfonyStyle($input, $output);
-======= end
         
         // récupère une liste toutes les instances de la classe Todo
         $todos = $this->todoRepository->findAll();
@@ -87,10 +83,6 @@ use Doctrine\Persistence\ManagerRegistry;
 // Alternative basée sur Doctrine
 //         // récupère une liste toutes les instances de la classe Todo dont completed vaut false
 //         $todos = $this->todoRepository->findByCompleted(false);
-<<<<<<< variant A
->>>>>>> variant B
-
-======= end
 //         if(! empty($todos)) {
 //             $io->title('list of active todos:');
 //             $io->listing($todos);
