@@ -1,0 +1,17 @@
+{%- set url = ea_url()
+    .setController('App\\Controller\\Admin\\TodoCrudController')
+    .setAction('detail')
+    .setEntityId(entity.instance.id)
+-%}
+{% set action = app.request.attributes.get('_controller')[1] %}
+{% if action == 'detail' %}
+    {{ field.value }}
+{% else %}
+	<a href="{{ url }}">
+		{% if entity.instance.completed %}
+			<strike>{{ field.value }}</strike>
+		{%  else %}
+            {{ field.value }}
+        {% endif %}    
+ 	</a>
+ {% endif %}

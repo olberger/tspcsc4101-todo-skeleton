@@ -16,9 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class IndexController extends AbstractController
 {    
-    /**
-     * @Route("/", name = "home", methods="GET")
-     */
+    #[Route('/', name: 'home', methods: ['GET'])]
     public function indexAction()
     {
         return $this->render('home.html.twig',array(
