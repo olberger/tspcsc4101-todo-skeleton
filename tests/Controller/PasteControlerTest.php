@@ -2,6 +2,10 @@
 namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
+use App\Entity\User;
 
 
 class PasteControllerTest extends WebTestCase
@@ -19,7 +23,7 @@ class PasteControllerTest extends WebTestCase
     {
         $client = $this->client;
         $client->request('GET', $url);
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
 
     public function urlProvider()
@@ -39,7 +43,8 @@ class PasteControllerTest extends WebTestCase
     public function testIndexContainsNew()
     {
         $client = $this->client;
-
+        self::login();
+        
         $crawler = $client->request('GET', '/paste/');
         $this->assertGreaterThan(
             0,
@@ -49,6 +54,8 @@ class PasteControllerTest extends WebTestCase
     public function testIndexContainsEditLink()
     {
         $client = $this->client;
+        self::login();
+        
         $crawler = $client->request('GET', '/paste/');
         $this->assertGreaterThan(
             0,
@@ -58,6 +65,8 @@ class PasteControllerTest extends WebTestCase
     public function testFirstPasteContainsLinks()
     {
         $client = $this->client;
+        self::login();
+        
         $crawler = $client->request('GET', '/paste/');
         $link = $crawler
         ->filter('a:contains("Show")') // find all links with the text "show"
@@ -88,7 +97,10 @@ class PasteControllerTest extends WebTestCase
     public function testNew()
     {
         $client = $this->client;
+        self::login();
         $crawler = $client->request('GET', '/paste/');
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
+                
         $nbPastes = $crawler->filter('tr')->count();
         $crawler = $client->request('GET', '/paste/new');
         $this->assertTrue($client->getResponse()
@@ -107,9 +119,10 @@ class PasteControllerTest extends WebTestCase
             )
         ));
         $crawler = $client->submit($form);
-        $this->assertTrue($client->getResponse()
-            ->isRedirect());
-        $crawler = $client->request('GET', '/paste/');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        
+        $crawler = $client->request('GET', '/paste/')
+        
         $this->assertGreaterThan($nbPastes, $crawler->filter('tr')
             ->count());
     }
@@ -120,6 +133,7 @@ class PasteControllerTest extends WebTestCase
     public function testDelete()
     {
         $client = $this->client;
+        self::login();
         $crawler = $client->request('GET', '/paste/');
         $this->assertTrue($client->getResponse()
             ->isSuccessful());
@@ -145,5 +159,23 @@ class PasteControllerTest extends WebTestCase
             ->isSuccessful());
         $this->assertGreaterThan($crawler->filter('tr')
             ->count(), $nbPastes);
+    }
+    /*
+     * Login Function to test methods reserved to Admin
+     */
+    private function logIn()
+    {
+        $session = $this->client->getContainer()->get('session');
+        $firewallName = 'main';
+        $firewallContext = $firewallName;
+        $doctrine = $this->client->getContainer()->get('doctrine');
+        $em = $doctrine->getManager();
+        $anna = $em->getRepository(User::class)->findOneByEmail('anna@localhost');
+        $token = new PostAuthenticationGuardToken($anna, $firewallName, $anna->getRoles());
+        $session->set('_security_'.$firewallContext, serialize($token));
+        $session->save();
+        
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
     }
 }

@@ -1,4 +1,3 @@
-
 {% extends 'baselayout.html.twig' %}
 
 {% block title %}Todo index{% endblock %}
@@ -10,7 +9,6 @@
             <tr>
                 <th>Id</th>
                 <th>Title</th>
-                <th>Completed</th>
                 <th>Created</th>
                 <th>Updated</th>
                 <th>Project</th>
@@ -28,32 +26,32 @@
             {{ todo.title }}
             {% if todo.completed %}
             </del>
-            {% endif %}   
-            </td> 
-             <td>{{ todo.completed ? 'Yes' : 'No' }}</td>
+            {% endif %}
+		</td>
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>              
+                <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>                
                 <td>
                 	{% if todo.project %}
                 	<a href="{{ path('project_show', {'id': todo.project.id}) }}" data-toggle="tooltip" title="{{ todo.project.description }}">{{ todo.project.title }}</a>
                 	{% endif %}
                 </td>  
                 <td>
-                <td><a href="{{ path('todo_show', {'id': todo.id}) }}"><button class="btn btn-lg btn-primary">Show</button></a>
-                    {% if is_granted('ROLE_ADMIN') %}
+                  <td>
+                    <a href="{{ path('todo_show', {'id': todo.id}) }}"><button class="btn btn-lg btn-primary">Show</button></a>
+                    {% if is_granted('ROLE_USER') %}
                     <a href="{{ path('todo_edit', {'id': todo.id}) }}"><button class="btn btn-lg btn-warning">Edit</button></a>
                     {% endif %}
    		</td>
         </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    {% if is_granted('ROLE_ADMIN') %}
+    {% if is_granted('ROLE_USER') %}
     <a href="{{ path('todo_new') }}"><button class="btn btn-lg btn-primary">Create new</button></a>
     {% endif %}
 

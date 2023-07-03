@@ -9,23 +9,38 @@
 namespace App\Command;
 
 use App\Entity\Todo;
+use App\Repository\TodoRepository;
+
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command Todo
  */
+#[AsCommand(
+    name: 'app:new-todo',
+    description: 'Creates a new todo',
+    )]
 class NewTodoCommand extends Command
 {    
-    private $entityManager;
+    /**
+     *  @var TodoRepository data access repository
+     */
+    private $todoRepository;
     
-    public function __construct(EntityManagerInterface $entityManager)
+    /**
+     * Plugs the database to the command
+     *
+     * @param ManagerRegistry $doctrineManager
+     */
+    public function __construct(ManagerRegistry $doctrineManager)
     {
-        $this->entityManager = $entityManager;
+        $this->todoRepository = $doctrineManager->getRepository(Todo::class);
         
         parent::__construct();
     }
@@ -33,28 +48,30 @@ class NewTodoCommand extends Command
     protected function configure()
     {
         $this
-        // the name of the command (the part after "bin/console")
-        ->setName('app:new-todo')
-        
-        // the short description shown while running "php bin/console list"
-        ->setDescription('Creates a new todo.')
-        
         // the full command description shown when running the command with
         // the "--help" option
-        ->setHelp('This command allows you to list one todo')
+        ->setHelp('This command allows you to create one todo')
         ->addArgument('title', InputArgument::REQUIRED, 'The title of the todo.')
         ;
     }
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
+        
         $todo = new Todo();
         $todo->setTitle($input->getArgument('title'));
         $todo->setCompleted(false);
-        $em = $this->entityManager;
-        $em->persist($todo);
-        $em->flush();
+        
+        $this->todoRepository->save($todo, true);
+        
+        if($todo->getId()) {
+            $io->text('Created: '. $todo);
 
-        $output->writeln('Created: '. $todo);
-        return 0;
+            return Command::SUCCESS;
+        }
+        else {
+            $io->error('could not create todo!');
+            return Command::FAILURE;
+        }
     }
 }
