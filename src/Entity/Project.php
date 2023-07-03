@@ -24,7 +24,7 @@ class Project
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
     
-    #[ORM\OneToMany(targetEntity: Todo::class, mappedBy: 'project', cascade: [‘persist’, ‘remove’])]
+    #[ORM\OneToMany(targetEntity: Todo::class, mappedBy: 'project', cascade: ['persist', 'remove'])]
     private $todos;
 
     public function __construct()
