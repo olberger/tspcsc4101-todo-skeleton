@@ -10,17 +10,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Todo;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @Route("/project")
- */
+#[Route('/project')]
 class ProjectController extends AbstractController
 {
-    /**
-     * @Route("/", name="project_index", methods={"GET"})
-     */
+    #[Route('/', name: 'project_index', methods: ['GET'])]
     public function index(ProjectRepository $projectRepository): Response
     {
         return $this->render('project/index.html.twig', [
@@ -28,10 +24,8 @@ class ProjectController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/new", name="project_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
+    #[Route('/new', name: 'project_new', methods: ['GET', 'POST'])]
+    public function new(ManagerRegistry $doctrine, Request $request): Response
     {
         $project = new Project();
         
@@ -39,7 +33,7 @@ class ProjectController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $doctrine->getManager();
             $entityManager->persist($project);
             $entityManager->flush();
 
@@ -52,20 +46,16 @@ class ProjectController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="project_show", methods={"GET"})
-     */
-    public function show(Project $project): Response
+    #[Route('/{id}', name: 'project_show', methods: ['GET'])]
+     public function show(Project $project): Response
     {
         return $this->render('project/show.html.twig', [
             'project' => $project,
         ]);
     }
 
-    /**
-     * @Route("/{id}/edit", name="project_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/edit', name: 'project_edit', methods: ['GET', 'POST'])]
+    public function edit(ManagerRegistry $doctrine, Request $request, Project $project): Response
     {
         $originalTodos = new ArrayCollection();
         
@@ -78,7 +68,8 @@ class ProjectController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
+            $entityManager = $doctrine->getManager();
             foreach ($originalTodos as $todo) {
                 // if the original todo is no longer there
                 if (! $project->getTodos()->contains($todo)) {
@@ -98,13 +89,11 @@ class ProjectController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="project_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Project $project): Response
+    #[Route('/{id}', name: 'project_delete', methods: ['POST'])]
+    public function delete(ManagerRegistry $doctrine, Request $request, Project $project): Response
     {
         if ($this->isCsrfTokenValid('delete'.$project->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $doctrine->getManager();
             $entityManager->remove($project);
             $entityManager->flush();
         }

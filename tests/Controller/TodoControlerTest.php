@@ -2,6 +2,10 @@
 namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
+use App\Entity\User;
 
 
 class TodoControllerTest extends WebTestCase
@@ -19,7 +23,8 @@ class TodoControllerTest extends WebTestCase
     {
         $client = $this->client;
         $client->request('GET', $url);
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertTrue($client->getResponse()
+            ->isSuccessful());
     }
 
     public function urlProvider()
@@ -31,8 +36,8 @@ class TodoControllerTest extends WebTestCase
     }
     public function testIndexPage()
     {
-       $client = $this->client;
-       $crawler = $client->request('GET', '/');
+        $client = $this->client;
+        $crawler = $client->request('GET', '/');
         /* is there 2 link to load css pages */
         $this->assertGreaterThan(1, $crawler->filter('link')
             ->count());
@@ -78,7 +83,8 @@ class TodoControllerTest extends WebTestCase
 
         // and click it
         $crawler = $client->click($link);
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertTrue($client->getResponse()
+            ->isSuccessful());
     }
 
     public function testFirstTodoContainsBackLink()
@@ -106,7 +112,8 @@ class TodoControllerTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('html table')
             ->count());
     }
-    public function testListTableActiveContainsLink()
+
+    public function testListActiveContainsLink()
     {
         $client = $this->client;
         $crawler = $client->request('GET', '/todo/list-active');
@@ -136,6 +143,7 @@ class TodoControllerTest extends WebTestCase
     public function testNew()
     {
         $client = $this->client;
+        $this->login();
         $crawler = $client->request('GET', '/todo/');
         $nbTodos = $crawler->filter('tr')->count();
         $crawler = $client->request('GET', '/todo/new');
@@ -148,6 +156,7 @@ class TodoControllerTest extends WebTestCase
             'todo' => array(
                 'title' => 'Test todo',
                 'completed' => False,
+                'project' => 1
             )
         ));
         $crawler = $client->submit($form);
@@ -164,6 +173,7 @@ class TodoControllerTest extends WebTestCase
     public function testDelete()
     {
         $client = $this->client;
+        $this->login();
         $crawler = $client->request('GET', '/todo/');
         $nbTodos = $crawler->filter('tr')->count();
         $this->assertGreaterThan(0, $nbTodos);
@@ -195,6 +205,7 @@ class TodoControllerTest extends WebTestCase
     public function testUpdate()
     {
         $client = $this->client;
+        $this->login();
         $crawler = $client->request('GET', '/todo/');
         $nbTodos = $crawler->filter('tr')->count();
         $this->assertGreaterThan(0, $nbTodos);
@@ -222,9 +233,28 @@ class TodoControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/todo/' . $todoId);
         $this->assertTrue($client->getResponse()->isSuccessful());
         $trCrawler = $crawler->filter('div.form-control');
-        $this->assertEquals(5, count($trCrawler));
+        $this->assertEquals(6, count($trCrawler));
         $tdCrawler = $trCrawler->eq(2); // 3rd line completed
         $this->assertEquals('oui',$tdCrawler->text());
+    }
+    /* 
+     * Login Function to test methods reserved to Admin
+     */
+    private function logIn()
+    {
+        $session = $this->client->getContainer()->get('session');
+        
+        $firewallName = 'main';
+        $firewallContext = $firewallName;
+        $doctrine = $this->client->getContainer()->get('doctrine');
+        $em = $doctrine->getManager();
+        $anna = $em->getRepository(User::class)->findOneByEmail('anna@localhost');
+        $token = new PostAuthenticationGuardToken($anna, $firewallName, $anna->getRoles());
+        $session->set('_security_'.$firewallContext, serialize($token));
+        $session->save();
+        
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
     }
 
 }

@@ -8,7 +8,8 @@ use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 use App\Entity\User;
 
 
-class PasteControllerTest extends WebTestCase
+
+class ProjectControllerTest extends WebTestCase
 {
     private $client = null;
     
@@ -28,113 +29,52 @@ class PasteControllerTest extends WebTestCase
 
     public function urlProvider()
     {
-        yield ['/paste/'];
-        yield ['/paste/1'];
-    }
-    public function testIndexContainsTable()
-    {
-        $client = $this->client;
-        $crawler = $client->request('GET', '/paste/');
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('table')->count()
-            );
-    }
-    public function testIndexContainsNew()
-    {
-        $client = $this->client;
-        self::login();
-        
-        $crawler = $client->request('GET', '/paste/');
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('a[href="/paste/new"]')->count()
-            );
-    }
-    public function testIndexContainsEditLink()
-    {
-        $client = $this->client;
-        self::login();
-        
-        $crawler = $client->request('GET', '/paste/');
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('a:contains("Edit")')->count()
-            );
-    }
-    public function testFirstPasteContainsLinks()
-    {
-        $client = $this->client;
-        self::login();
-        
-        $crawler = $client->request('GET', '/paste/');
-        $link = $crawler
-        ->filter('a:contains("Show")') // find all links with the text "show"
-        ->eq(0) // select the first link in the list
-        ->link()
-        ;
-        
-        // and click it
-        $crawler = $client->click($link);
-        $this->assertTrue($client->getResponse()->isSuccessful());
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('a:contains("Edit")')->count()
-            );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('a:contains("Back")')->count()
-            );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('form input[value="DELETE"]')->count()
-            );
+        yield ['/project/'];
+        yield ['/project/1'];
+        // ...
     }
     /**
-     * Post a paste : 'Content', 'Created', 'content-type'
+     * Post a project : 'Content', 'Created', 'content-type'
      *
      */
     public function testNew()
     {
         $client = $this->client;
         self::login();
-        $crawler = $client->request('GET', '/paste/');
+        $crawler = $client->request('GET', '/project/');
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
                 
         $nbPastes = $crawler->filter('tr')->count();
-        $crawler = $client->request('GET', '/paste/new');
+        $crawler = $client->request('GET', '/project/new');
         $this->assertTrue($client->getResponse()
             ->isSuccessful());
         $this->assertGreaterThan(0, $crawler->filter('form:contains("Save")')
             ->count());
         $buttonCrawlernode = $crawler->selectButton('Save');
         $form = $buttonCrawlernode->form(array(
-            'paste' => array(
-                'content' => 'Test paste',
-                'content_type' => 'text',
-                'created'=>array (
-                    'date' => array( 'year' => 2020, 'month' => 4, 'day' => 14),
-                    'time' => array('hour' => 14, 'minute' => 30)
-                )
+            'project' => array(
+                'title' => 'Test project',
+                'description' => 'Test project'
             )
         ));
         $crawler = $client->submit($form);
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         
-        $crawler = $client->request('GET', '/paste/')
+        $crawler = $client->request('GET', '/project/');
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
         
         $this->assertGreaterThan($nbPastes, $crawler->filter('tr')
             ->count());
     }
     
     /**
-     * Delete last Paste
+     * Delete last Project
      */
     public function testDelete()
     {
         $client = $this->client;
         self::login();
-        $crawler = $client->request('GET', '/paste/');
+        $crawler = $client->request('GET', '/project/');
         $this->assertTrue($client->getResponse()
             ->isSuccessful());
         $nbPastes= $crawler->filter('tr')->count();
@@ -144,7 +84,7 @@ class PasteControllerTest extends WebTestCase
         ->children();
         $pasteId = $trCrawler->first()->text();
         $this->assertGreaterThan(0, $pasteId);
-        $crawler = $client->request('GET', '/paste/' . $pasteId);
+        $crawler = $client->request('GET', '/project/' . $pasteId);
         $this->assertTrue($client->getResponse()
             ->isSuccessful());
         $this->assertGreaterThan(0, $crawler->filter('form:contains("Delete")')
@@ -154,7 +94,7 @@ class PasteControllerTest extends WebTestCase
         $crawler = $client->submit($form);
         $this->assertTrue($client->getResponse()
             ->isRedirect());
-        $crawler = $client->request('GET', '/paste/');
+        $crawler = $client->request('GET', '/project/');
         $this->assertTrue($client->getResponse()
             ->isSuccessful());
         $this->assertGreaterThan($crawler->filter('tr')

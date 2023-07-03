@@ -6,33 +6,25 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProjectRepository;
+use Doctrine\DBAL\Types\Types;
 
-/**
- * @ApiResource()
- * @ORM\Entity(repositoryClass="App\Repository\ProjectRepository")
- */
+#[ORM\Entity(repositoryClass: ProjectRepository::class)]
+#[ApiResource]
 class Project
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $title;
+    #[ORM\Column(length: 255)]
+    private ?string $title;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Todo", mappedBy="project", cascade={"persist"})
-     */
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+    
+    #[ORM\OneToMany(targetEntity: Todo::class, mappedBy: 'project', cascade: [‘persist’, ‘remove’])]
     private $todos;
 
     public function __construct()

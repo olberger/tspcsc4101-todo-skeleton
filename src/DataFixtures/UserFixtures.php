@@ -1,43 +1,58 @@
 <?php
-
 namespace App\DataFixtures;
 
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
 
 class UserFixtures extends Fixture
 {
-         private $passwordEncoder;
 
-         public function __construct(UserPasswordEncoderInterface $passwordEncoder)
-         {
-             $this->passwordEncoder = $passwordEncoder;
-        }
+    private $userPasswordHasherInterface;
+
+    public function __construct(UserPasswordHasherInterface $userPasswordHasherInterface)
+    {
+        $this->userPasswordHasherInterface = $userPasswordHasherInterface;
+    }
 
     public function load(ObjectManager $manager)
     {
         $this->LoadUsers($manager);
-
-        $manager->flush();
     }
+
     private function loadUsers(ObjectManager $manager)
     {
-        foreach ($this->getUserData() as [$email,$plainPassword,$role]) {
+        foreach ($this->getUserData() as [
+            $email,
+            $plainPassword,
+            $role
+        ]) {
             $user = new User();
-            $encodedPassword = $this->passwordEncoder->encodePassword($user, $plainPassword);
+            $encodedPassword = $this->userPasswordHasherInterface->hashPassword($user, $plainPassword);
             $user->setEmail($email);
             $user->setPassword($encodedPassword);
-            $user->addRole($role);
+
+            $roles = array();
+            $roles[] = $role;
+            $user->setRoles($roles);
+
             $manager->persist($user);
         }
+        $manager->flush();
     }
 
     private function getUserData()
     {
-        yield ['chris@localhost','chris','ROLE_USER'];
-        yield ['anna@localhost','anna','ROLE_ADMIN'];
-
+        yield [
+            'chris@localhost',
+            'chris',
+            'ROLE_USER'
+        ];
+        yield [
+            'anna@localhost',
+            'anna',
+            'ROLE_ADMIN'
+        ];
     }
 }
