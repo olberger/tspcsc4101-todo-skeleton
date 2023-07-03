@@ -20,7 +20,7 @@ class PasteType extends AbstractType
             ->add('imageName', TextType::class,  ['disabled' => true])
             ->add('imageFile', VichImageType::class, [
                 'required' => false,
-                'delete_label'          => 'Delete image ?'
+                'delete_label' => 'Delete image ?'
             ])
         ;
     }

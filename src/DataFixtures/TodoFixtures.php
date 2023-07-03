@@ -12,12 +12,11 @@
 namespace App\DataFixtures;
 
 use App\Entity\Todo;
-use App\Entity\Paste;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-
-class TodoFixtures extends Fixture
+class TodoFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -43,5 +42,12 @@ class TodoFixtures extends Fixture
         yield ['monter une startup',  false];
         yield ['devenir maître du monde', false];
 
+    }
+    
+    public function getDependencies()
+    {
+        return array(
+            ProjectFixtures::class,
+        );
     }
 }

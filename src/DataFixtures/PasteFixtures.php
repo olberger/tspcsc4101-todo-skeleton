@@ -28,7 +28,7 @@ class PasteFixtures extends Fixture
             $paste = new Paste();
             $paste->setContent($title);
             $paste->setContentType("text");
-            $paste->setCreated(new \DateTime());
+            $paste->setCreated(new DateTime());
             $manager->persist($paste);
         }
         $manager->flush();

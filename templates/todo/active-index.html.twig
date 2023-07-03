@@ -12,7 +12,8 @@
                 <th>Title</th>
                 <th>Created</th>
                 <th>Updated</th>
-                <td>Actions</td>
+                <th>Project</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -24,10 +25,15 @@
                 <td>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-		<a href="{{ path('todo_show', {'id': todo.id}) }}"><button class="btn btn-lg btn-primary">Show</button></a>
+                	{% if todo.project %}
+                	<a href="{{ path('project_show', {'id': todo.project.id}) }}" data-toggle="tooltip" title="{{ todo.project.description }}">{{ todo.project.title }}</a>
+                	{% endif %}
+                </td>  
+                <td>
+                    <a href="{{ path('todo_show', {'id': todo.id}) }}"><button class="btn btn-lg btn-primary">Show</button></a>
                     {% if is_granted('ROLE_USER') %}
                     <a href="{{ path('todo_edit', {'id': todo.id}) }}"><button class="btn btn-lg btn-warning">Edit</button></a>
-		    {% endif %}
+                    {% endif %}
                  </td>
            </tr>
             {% endif %}

@@ -21,8 +21,11 @@
                 <td>{{ project.title }}</td>
                 <td>{{ project.description }}</td>
                 <td>
-                    <a href="{{ path('project_show', {'id': project.id}) }}">show</a>
-                    <a href="{{ path('project_edit', {'id': project.id}) }}">edit</a>
+                    <a href="{{ path('project_show', {'id': project.id}) }}"><button class="btn btn-lg btn-primary">Show</button></a>
+                    {% if is_granted('ROLE_USER') %}
+                    <a href="{{ path('project_edit', {'id': project.id}) }}"><button class="btn btn-lg btn-warning">Edit</button></a>
+                    {% endif %}
+                    
                 </td>
             </tr>
         {% else %}
@@ -32,6 +35,8 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('project_new') }}">Create new</a>
+    {% if is_granted('ROLE_USER') %}
+    <a href="{{ path('project_new') }}"><button class="btn btn-lg btn-primary">Create new</button></a>
+    {% endif %}
+    
 {% endblock %} {# main #}

@@ -156,6 +156,7 @@ class TodoControllerTest extends WebTestCase
             'todo' => array(
                 'title' => 'Test todo',
                 'completed' => False,
+                'project' => 1
             )
         ));
         $crawler = $client->submit($form);
@@ -232,7 +233,7 @@ class TodoControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/todo/' . $todoId);
         $this->assertTrue($client->getResponse()->isSuccessful());
         $trCrawler = $crawler->filter('div.form-control');
-        $this->assertEquals(5, count($trCrawler));
+        $this->assertEquals(6, count($trCrawler));
         $tdCrawler = $trCrawler->eq(2); // 3rd line completed
         $this->assertEquals('oui',$tdCrawler->text());
     }
