@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Todo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/project')]
 class ProjectController extends AbstractController
@@ -25,6 +26,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/new', name: 'project_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function new(ManagerRegistry $doctrine, Request $request): Response
     {
         $project = new Project();
@@ -55,6 +57,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'project_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function edit(ManagerRegistry $doctrine, Request $request, Project $project): Response
     {
         $originalTodos = new ArrayCollection();
@@ -90,6 +93,7 @@ class ProjectController extends AbstractController
     }
 
     #[Route('/{id}', name: 'project_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
     public function delete(ManagerRegistry $doctrine, Request $request, Project $project): Response
     {
         if ($this->isCsrfTokenValid('delete'.$project->getId(), $request->request->get('_token'))) {
