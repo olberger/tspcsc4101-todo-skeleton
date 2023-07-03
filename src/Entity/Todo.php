@@ -1,34 +1,27 @@
 <?php
+
 namespace App\Entity;
 
-//use Doctrine\ORM\Mapping as ORM;
-//use DateTime;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TodoRepository;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Core\Annotation\ApiResource;
-use DateTime;
 
 /**
  * Tâche
- * @ApiResource(
- *     collectionOperations={
- *         "get",
- *         "post"={"access_control"="is_granted('ROLE_ADMIN')"}
- *     },
- *     itemOperations={
- *         "get",
- *         "put"={"access_control"="is_granted('ROLE_ADMIN')"},
- *         "delete"={"access_control"="is_granted('ROLE_ADMIN')"}
- *     }
- * )
  */
 #[ORM\Entity(repositoryClass: TodoRepository::class)]
 #[ApiResource]
+#[Get]
+#[Put(security: "is_granted('ROLE_USER')")]
+#[GetCollection]
+#[Post(security: "is_granted('ROLE_USER')")]
 class Todo {
-    /**
-     * @var int
-     */
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -61,6 +54,9 @@ class Todo {
      */
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updated = null;
+    
+    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'todos')]
+    private $project;
     
     public function __construct() 
     {
@@ -132,5 +128,16 @@ class Todo {
         
         return $this;
     }
-
+    
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+    
+    public function setProject(?Project $project): self
+    {
+        $this->project = $project;
+        
+        return $this;
+    }
 }

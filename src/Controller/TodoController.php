@@ -97,10 +97,8 @@ class TodoController extends AbstractController
         ]);
     }
     
-    /**
-     * @Route("/project/{id}/addtodo", name="todo_add", methods="GET|POST")
-     * @IsGranted("ROLE_USER")
-     */
+    #[Route('/project/{id}/addtodo', name: 'todo_add', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function add(Request $request, Project $project): Response
     {
         $todo = new Todo();

@@ -9,11 +9,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 
-/**
- * @Vich\Uploadable
- */
 #[ORM\Entity(repositoryClass: PasteRepository::class)]
 #[ApiResource]
+#[Vich\Uploadable]
 class Paste
 {
     #[ORM\Id]
@@ -30,24 +28,17 @@ class Paste
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $content_type = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @var string
-     */
-    private $imageName;
+    #[ORM\Column(nullable: true)]
+    private ?string $imageName = null;
     
-    /**
-     * @Vich\UploadableField(mapping="pastes", fileNameProperty="imageName")
-     * @var File
-     */
+    #[ORM\Column(nullable: true)]
+    private ?int $imageSize = null;
+    
+    #[Vich\UploadableField(mapping: 'pastes', fileNameProperty: 'imageName', size: 'imageSize')]
     private $imageFile;
     
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     *
-     * @var \DateTime
-     */
-    private $imageUpdatedAt;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
     
     public function getId(): ?int
     {
@@ -96,16 +87,16 @@ class Paste
      * must be able to accept an instance of 'File' as the bundle will inject one here
      * during Doctrine hydration.
      *
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $imageFile
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
      */
     public function setImageFile(?File $imageFile = null): void
     {
         $this->imageFile = $imageFile;
-        
+
         if (null !== $imageFile) {
             // It is required that at least one field changes if you are using doctrine
             // otherwise the event listeners won't be called and the file is lost
-            $this->imageUpdatedAt = new \DateTimeImmutable();
+            $this->updatedAt = new \DateTimeImmutable();
         }
     }
     
@@ -122,5 +113,15 @@ class Paste
     public function getImageName(): ?string
     {
         return $this->imageName;
+    }
+    
+    public function setImageSize(?int $imageSize): void
+    {
+        $this->imageSize = $imageSize;
+    }
+    
+    public function getImageSize(): ?int
+    {
+        return $this->imageSize;
     }
 }
