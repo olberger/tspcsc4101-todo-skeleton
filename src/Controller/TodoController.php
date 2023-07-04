@@ -16,13 +16,11 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Controleur Todo
- * @Route("/todo")
- */
+     */
+#[Route('/todo')]
 class TodoController extends AbstractController
 {    
-    /**
-     * @Route("/", name = "home", methods="GET")
-     */
+    #[Route('/', name: 'home', methods: ['GET'])]
     public function indexAction()
     {
         $htmlpage = '<!DOCTYPE html>
@@ -47,10 +45,9 @@ class TodoController extends AbstractController
     
     /**
      * Lists all todo entities.
-     *
-     * @Route("/list", name = "todo_list", methods="GET")
-     * @Route("/index", name="todo_index", methods="GET")
      */
+    #[Route('/list', name: 'todo_list', methods: ['GET'])]
+    #[Route('/index', name: 'todo_index', methods: ['GET'])]
     public function listAction(ManagerRegistry $doctrine)
     {
         $htmlpage = '<!DOCTYPE html>
@@ -83,9 +80,8 @@ class TodoController extends AbstractController
     
     /**
      * Finds and displays a todo entity.
-     *
-     * @Route("/{id}", name="todo_show", requirements={ "id": "\d+"}, methods="GET")
      */
+    #[Route('/{id}', name: 'todo_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function showAction(Todo $todo): Response
     {
         $htmlpage = '<!DOCTYPE html>
