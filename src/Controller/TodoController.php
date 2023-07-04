@@ -64,8 +64,11 @@ class TodoController extends AbstractController
         $entityManager= $doctrine->getManager();
         $todos = $entityManager->getRepository(Todo::class)->findAll();
         foreach($todos as $todo) {
-           $htmlpage .= '<li>
-            <a href="/todo/'.$todo->getid().'">'.$todo->getTitle().'</a></li>';
+            $url = $this->generateUrl(
+                'todo_show',
+                ['id' => $todo->getId()]);
+            $htmlpage .= '<li>
+            <a href="'. $url .'">'. $todo->getTitle() .'</a></li>';
          }
         $htmlpage .= '</ul>';
 
