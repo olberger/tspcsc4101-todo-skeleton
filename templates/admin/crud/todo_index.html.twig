@@ -3,19 +3,19 @@
 
 {# Contents below copy-pasted from vendor/easycorp/easyadmin-bundle/src/Resources/views/crud/index.html.twig #}
 
-{% block table_body %}
+        {% block table_body %}
             {% for entity in entities %}
-                {% if not entity.isAccessible %}
-                    {% set some_results_are_hidden = true %}
-                {% else %}
+                {% if entity.isAccessible %}
                     <tr data-id="{{ entity.primaryKeyValueAsString }}"
-                    {# CUSTOMIZE ROW BACKGROUND  #}
-                    {% if entity.instance.completed %}
-                    	class="table-secondary"
-                    {% else %}
-                    	class="table-primary"
-                    {% endif %}
-                    {# END CUSTOMIZE ROW BACKGROUND  #}
+                    
+                        {# CUSTOMIZE ROW BACKGROUND  #}
+                        {% if entity.instance.completed %}
+                        	class="table-secondary"
+                        {% else %}
+                        	class="table-primary"
+                        {% endif %}
+                        {# END CUSTOMIZE ROW BACKGROUND  #}
+                    
                     >
                         {% if has_batch_actions %}
                             <td class="batch-actions-selector">
@@ -26,7 +26,7 @@
                         {% endif %}
 
                         {% for field in entity.fields %}
-                            <td data-label="{{ field.label|e('html_attr') }}" class="{{ field.property == sort_field_name ? 'sorted' }} text-{{ field.textAlign }} {{ field.cssClass }}" dir="{{ ea.i18n.textDirection }}">
+                            <td data-column="{{ field.property }}" data-label="{{ field.label|trans|e('html_attr') }}" class="{{ field.property == sort_field_name ? 'sorted' }} text-{{ field.textAlign }} {{ field.cssClass }}" dir="{{ ea.i18n.textDirection }}">
                                 {{ include(field.templatePath, { field: field, entity: entity }, with_context = false) }}
                             </td>
                         {% endfor %}
@@ -76,7 +76,7 @@
                         {% if 3 == loop.index %}
                             <tr class="no-results">
                                 <td colspan="100">
-                                    {{ 'datagrid.no_results'|trans(ea.i18n.translationParameters, 'EasyAdminBundle') }}
+                                    {{ t('datagrid.no_results', ea.i18n.translationParameters, 'EasyAdminBundle')|trans }}
                                 </td>
                             </tr>
                         {% endif %}
@@ -86,7 +86,7 @@
 
             {% if some_results_are_hidden %}
                 <tr class="datagrid-row-empty">
-                    <td class="text-center" colspan="{{ entities|first.fields|length + 1 }}">
+                    <td class="text-center" colspan="100">
                         <span class="datagrid-row-empty-message"><i class="fa fa-lock mr-1"></i> {{ 'datagrid.hidden_results'|trans({}, 'EasyAdminBundle') }}</span>
                     </td>
                 </tr>
