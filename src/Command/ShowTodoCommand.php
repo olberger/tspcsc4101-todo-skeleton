@@ -65,7 +65,7 @@ class ShowTodoCommand extends Command
             
             $id = $input->getArgument('todoId');
             
-            // fetches all instances of class Todo from the DB
+            // fetches an instance of class Todo from the DB, based on its id
             $todo = $this->todoRepository->find($id);
             
             //dump($todo);
