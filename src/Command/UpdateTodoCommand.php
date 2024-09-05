@@ -25,7 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 #[AsCommand(
     name: 'app:update-todo',
-    description: 'Updates a tod',
+    description: 'Updates a todo',
     )]
 class UpdateTodoCommand extends Command
 {    
