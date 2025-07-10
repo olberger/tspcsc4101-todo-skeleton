@@ -11,6 +11,7 @@ To test, use :
  $ composer create-project oberger/tspcsc4101-todo-skeleton todo-app "v2.*"
 
 Changelog :
+ - v2.16 : Fix errors in tests (which are currently useless)
  - v2.15 : Update from Symfony 6.3 to Symfony 6.4
  - v2.13 : Update from Symfony 5.4 to Symfony 6.3
  - v2.x : Add basic Web interface and EasyAdmin dashboard
