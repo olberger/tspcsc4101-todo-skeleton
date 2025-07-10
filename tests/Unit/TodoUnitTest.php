@@ -22,9 +22,9 @@ class TodoUnitTest extends TestCase
         $this->assertEquals($date, $todo->getUpdated());
         $this->assertEquals($text, $todo->getTitle());
         $this->assertEquals(0, $todo->getId());
-        $this->assertEquals(0, $todo->getCompleted());
+        $this->assertEquals(false, $todo->isCompleted());
         $todo->setCompleted(true);
-        $this->assertEquals(true, $todo->getCompleted());
+        $this->assertEquals(true, $todo->isCompleted());
         
     }
 }
