@@ -45,7 +45,7 @@ class NewTodoCommand extends Command
         parent::__construct();
     }
     
-    protected function configure()
+    protected function configure() : void
     {
         $this
         // the full command description shown when running the command with
@@ -54,7 +54,7 @@ class NewTodoCommand extends Command
         ->addArgument('title', InputArgument::REQUIRED, 'The title of the todo.')
         ;
     }
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         

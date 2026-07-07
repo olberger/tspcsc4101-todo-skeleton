@@ -47,7 +47,7 @@ use Doctrine\Persistence\ManagerRegistry;
         parent::__construct();
     }
     
-    protected function configure()
+    protected function configure() : void
     {
         $this
         // the full command description shown when running the command with

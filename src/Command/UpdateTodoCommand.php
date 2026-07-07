@@ -46,7 +46,7 @@ class UpdateTodoCommand extends Command
         parent::__construct();
     }
     
-    protected function configure()
+    protected function configure() : void
     {
         $this
         // the full command description shown when running the command with
@@ -55,7 +55,7 @@ class UpdateTodoCommand extends Command
         ->addArgument('todoId', InputArgument::REQUIRED, 'The id of the todo.')
         ;
     }
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         
